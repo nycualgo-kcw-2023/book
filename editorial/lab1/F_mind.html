@@ -289,8 +289,8 @@ else        { /* warrior loses */ }
         we -= sum(max(sd - a, 0), max(sd - 1, 0));
         get_hit -= a, a = 0;
     }
-    wd -= get_hit * sd;
-    return (wd &gt; 0);
+    we -= get_hit * sd;
+    return (we &gt; 0); /// 'True' if warrior wins
 }
 
 battle(wd, we, sd + gcd(wp, sp), se + gcd(wp, sp), a);

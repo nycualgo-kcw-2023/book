@@ -1,5 +1,6 @@
 
-editorial/lab2/
+editorial/lab2/*
+!editorial/lab2/overview.html
 
 editorial/lab1/**/D*
 

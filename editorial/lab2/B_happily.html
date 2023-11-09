@@ -1,0 +1,685 @@
+<!DOCTYPE HTML>
+<html lang="en" class="rust" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>B. Let&#x27;s Write Divide and Conquer Happily! - 515505 - Introduction to Algorithms</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "rust";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../editorial/overview.html"><strong aria-hidden="true">1.</strong> Labs / Term Exams</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../editorial/lab0/overview.html"><strong aria-hidden="true">1.1.</strong> Lab 0</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../editorial/lab0/A_helloworld.html"><strong aria-hidden="true">1.1.1.</strong> A. helloworld</a></li><li class="chapter-item "><div><strong aria-hidden="true">1.1.2.</strong> B. proficient</div></li><li class="chapter-item "><a href="../../editorial/lab0/C_taxrate.html"><strong aria-hidden="true">1.1.3.</strong> C. taxrate</a></li><li class="chapter-item "><a href="../../editorial/lab0/D_withdraw.html"><strong aria-hidden="true">1.1.4.</strong> D. withdraw</a></li><li class="chapter-item "><div><strong aria-hidden="true">1.1.5.</strong> E. queue</div></li><li class="chapter-item "><a href="../../editorial/lab0/F_postfix.html"><strong aria-hidden="true">1.1.6.</strong> F. postfix</a></li><li class="chapter-item "><a href="../../editorial/lab0/G_jujutsu.html"><strong aria-hidden="true">1.1.7.</strong> G. jujutsu</a></li><li class="chapter-item "><div><strong aria-hidden="true">1.1.8.</strong> H. classic</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.1.9.</strong> I. classici</div></li></ol></li><li class="chapter-item "><a href="../../editorial/lab1/overview.html"><strong aria-hidden="true">1.2.</strong> Lab 1</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../editorial/lab1/A_writinglab.html"><strong aria-hidden="true">1.2.1.</strong> A. Writing Lab 1 Together</a></li><li class="chapter-item "><a href="../../editorial/lab1/B_domino.html"><strong aria-hidden="true">1.2.2.</strong> B. Falling Domino</a></li><li class="chapter-item "><a href="../../editorial/lab1/C_convex.html"><strong aria-hidden="true">1.2.3.</strong> C. Convex Hull</a></li><li class="chapter-item "><div><strong aria-hidden="true">1.2.4.</strong> D. エロ発生 (Error)</div></li><li class="chapter-item "><a href="../../editorial/lab1/E_balance.html"><strong aria-hidden="true">1.2.5.</strong> E. Balanced Array</a></li><li class="chapter-item "><a href="../../editorial/lab1/F_mind.html"><strong aria-hidden="true">1.2.6.</strong> F. Path of the Mind</a></li></ol></li><li class="chapter-item expanded "><a href="../../editorial/lab2/overview.html"><strong aria-hidden="true">1.3.</strong> Lab 2</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div><strong aria-hidden="true">1.3.1.</strong> A. Easy Problem</div></li><li class="chapter-item expanded "><a href="../../editorial/lab2/B_happily.html" class="active"><strong aria-hidden="true">1.3.2.</strong> B. Let's Write Divide and Conquer Happily!</a></li><li class="chapter-item "><div><strong aria-hidden="true">1.3.3.</strong> C. Two Increasing Arrays</div></li><li class="chapter-item "><a href="../../editorial/lab2/D_monkey.html"><strong aria-hidden="true">1.3.4.</strong> D. Monkey</a></li><li class="chapter-item "><div><strong aria-hidden="true">1.3.5.</strong> E. Binary Exponentiation</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.3.6.</strong> F. Bad Sequence</div></li></ol></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">515505 - Introduction to Algorithms</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<h1 id="b-lets-write-divide-and-conquer-happily"><a class="header" href="#b-lets-write-divide-and-conquer-happily">B. Let's Write Divide and Conquer Happily!</a></h1>
+<ul>
+<li>Online Judge: <a href="https://oj.nctu.edu.tw/problems/1621/" target="_blank">1621</a></li>
+<li>Author: 成俊宏、劉永福</li>
+</ul>
+<h2 id="problem-description"><a class="header" href="#problem-description">Problem Description</a></h2>
+<details><summary>PDF</summary>
+<object data="./pdf/B_happily.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="./pdf/B_happily.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="./pdf/B_happily.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
+</details>
+<p>給定一個包含 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> 個整數的陣列，你的任務是處理 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span></span></span></span> 個以下類型的查詢：</p>
+<ol>
+<li>更新位置 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> 的值為 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></li>
+<li>求區間 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> 中值的總和</li>
+<li>求區間 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> 中的最大前綴和</li>
+<li>求區間 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> 中的最大後綴和</li>
+</ol>
+<p>輸出每筆詢問對應的答案是多少。</p>
+<p>注意，前綴區間和後綴區間長度可為 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>，也就是答案最小值為 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>。</p>
+<p>Here is a summary of the tasks for each query:</p>
+<ol>
+<li>Update the value at position <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> to <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span>.</li>
+<li>Find the total sum of values in the interval <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>.</li>
+<li>Find the maximum prefix sum in the interval <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>.</li>
+<li>Find the maximum suffix sum in the interval <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>.</li>
+</ol>
+<p>Output the answers for each query.</p>
+<p>Note: The length of prefix and suffix intervals can be <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>, meaning the minimum value for the answer is <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>.</p>
+<ul>
+<li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7804em;vertical-align:-0.136em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">200</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">000</span></span></span></span>.</li>
+<li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7804em;vertical-align:-0.136em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">200</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">000</span></span></span></span>.</li>
+<li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span></span></span></span> for <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span></span></span></span>.</li>
+<li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">o</span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span><span class="mclose">}</span></span></span></span> for each query.</li>
+<li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7804em;vertical-align:-0.136em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8304em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> for each query of type <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>.</li>
+<li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal">u</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span></span></span></span> for each query of type <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>.</li>
+<li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7804em;vertical-align:-0.136em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> for each query of type <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span></span></span></span>.</li>
+</ul>
+<h2 id="chinese-editorial"><a class="header" href="#chinese-editorial">Chinese Editorial</a></h2>
+<p>照著題目的敘述，先考慮區間總和的部份。選擇一些特定的區間，儲存這些區間的答案，並用這些紀錄的區間透過分治法來完成每次詢問及修改。</p>
+<p>大部分的題解已經放在題敘了，這裡會將題敘的中的部分內容與程式碼對照 &amp; 講解。</p>
+<h3 id="實作細節"><a class="header" href="#實作細節">實作細節</a></h3>
+<h3 id="build"><a class="header" href="#build">Build</a></h3>
+<blockquote>
+<p>Specifically, you can initially use Divide and Conquer to calculate the answer for <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span> and record the answers encountered during the recursion.</p>
+</blockquote>
+<p>在一開始使用分治法求出各區間答案。</p>
+<p>參考程式碼及註解，這邊使用在陣列上儲存二元樹的方式去記錄答案：</p>
+<details><summary>分治計算區間和，程式碼</summary>
+<pre><code class="language-cpp">#define LEFT_CHILD(idx) (idx &lt;&lt; 1)
+#define RIGHT_CHILD(idx) ((idx &lt;&lt; 1) | 1)
+
+void GetIntervalSum(int l = 1, int r = n, int idx = 1){
+    if (l == r) {  // leaf node
+        intervals[idx].sum = a[l];
+        return;
+    }
+
+    int m = (l + r) / 2; // divide
+
+    GetIntervalSum(l, m, LEFT_CHILD(idx));      // conquer left part
+    GetIntervalSum(m + 1, r, RIGHT_CHILD(idx)); // conquer right part
+
+    // merge the result of left and right part
+    intervals[idx].sum = intervals[LEFT_CHILD(idx)].sum + intervals[RIGHT_CHILD(idx)].sum;
+}
+</code></pre>
+</details>
+<h3 id="range-query"><a class="header" href="#range-query">Range Query</a></h3>
+<blockquote>
+<p>Then, to calculate the answer for <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>, you can start from <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span> and employ Divide and Conquer once more.
+During the recursion, for the current interval <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> and the queried interval <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>, there are three situations:</p>
+<ol>
+<li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> is entirely inside <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>. In this case, we can directly add <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span></span></span></span> to our answer.</li>
+<li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> is entirely outside <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>. In this scenario, this interval doesn't affect the answer.</li>
+<li>Otherwise, we can divide it into two subproblems:
+<ol>
+<li>How the answer of the interval <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mclose">]</span></span></span></span> contributes to <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span></span></span></span>.</li>
+<li>How the answer of the interval <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> contributes to <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span></span></span></span>.</li>
+</ol>
+</li>
+</ol>
+</blockquote>
+<p>在已知每個區間答案的情況下，可以用以上的方法，利用已儲存的部分來求得 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> 的答案。就如同題敘提到的，我們分成三個 Case 去分治求解。</p>
+<p>參考一下程式碼及註解：</p>
+<details><summary>區間查詢，程式碼</summary>
+<pre><code class="language-cpp">long long QuerySum(int &amp;ql, int &amp;qr, int l = 1, int r = n, int idx = 1) {
+    /*** Case 1 : [l, r] is entirely inside [ql, qr] ***/
+    if (ql &lt;= l &amp;&amp; r &lt;= qr) {  // contain by query range
+        return intervals[idx].sum;
+    }
+
+    /*** Case 2 : [l, r] is entirely outside [ql, qr] ***/
+    if (qr &lt; l || r &lt; ql) {
+        return 0;  // return 0 won't affect the calculation of sum in parent query
+    }
+
+    /*** Case 3 : divide [l, r] into two subproblems ***/
+    int m = (l + r) / 2; // divide
+
+    long long left_part_ans = QuerySum(ql, qr, l, m, LEFT_CHILD(idx)); // conquer left part
+    long long right_part_ans = QuerySum(ql, qr, m + 1, r, RIGHT_CHILD(idx)); // conquer right part
+
+    return left_part_ans + right_part_ans; // merge the result of left and right part
+}
+</code></pre>
+</details>
+<h3 id="update"><a class="header" href="#update">Update</a></h3>
+<blockquote>
+<p>Treat updates as a range query of <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span></span></span></span>.
+The path of the range query traverses through intervals whose values will be affected if the number changes to <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span>, and we can handle this efficiently.</p>
+</blockquote>
+<p>對於修改的操作，我們要找到所有受修改影響的區間，並更新其答案。</p>
+<p>而受影響的區間跟查詢 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span></span></span></span> 的過程中遇到的區間一樣，在過程中更新這些區間即可。</p>
+<p>參考以下程式碼及註解：</p>
+<details><summary>修改操作，程式碼</summary>
+<pre><code class="language-cpp">void UpdateIntervalSum(int k, int u, int l = 1, int r = n, int idx = 1) {
+    // Treat updates as a range query of [k, k] : ql = qr = k
+
+    /*** Case 1 : [l, r] == [k, k] ***/
+    if (k &lt;= l &amp;&amp; r &lt;= k) {  // leaf node, same as (l == k &amp;&amp; r == k)
+        intervals[idx].sum = u;
+        return;
+    }
+
+    /*** Case 2 : [l, r] is entirely outside [k, k] ***/
+    if (k &lt; l || k &gt; r)  // not affected by update
+        return;
+
+    /*** Case 3 : affected by update, divide [l, r] into two parts ***/
+    int m = (l + r) / 2; // divide
+    
+    Update(k, u, l, m, LEFT_CHILD(idx)); // conquer left part
+    Update(k, u, m + 1, r, RIGHT_CHILD(idx)); // conquer right part
+
+    // Update the sum of current interval by merging the result of left and right part
+    intervals[idx].sum = intervals[LEFT_CHILD(idx)].sum + intervals[RIGHT_CHILD(idx)].sum;
+}
+</code></pre>
+</details>
+<h3 id="merge-maximum-prefix-suffix-sum"><a class="header" href="#merge-maximum-prefix-suffix-sum">Merge Maximum Prefix (Suffix) Sum</a></h3>
+<blockquote>
+<p>For each interval with a length greater than or equal to <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span>, the maximum prefix sum can only happen in the following two cases:</p>
+<ol>
+<li>we can obtain the candidate answer by considering <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">pmax</span></span><span class="mopen">(</span><span class="mord text"><span class="mord">left interval</span></span><span class="mclose">)</span></span></span></span> .</li>
+<li>we can get the other candidate answer by adding <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">(</span><span class="mord text"><span class="mord">left interval</span></span><span class="mclose">)</span></span></span></span> and <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">pmax</span></span><span class="mopen">(</span><span class="mord text"><span class="mord">right interval</span></span><span class="mclose">)</span></span></span></span>.</li>
+</ol>
+</blockquote>
+<p>我們在題敘提供了最大前綴和的合併方式，參考以下對應的程式碼：</p>
+<details><summary>合併最大前綴和，程式碼</summary>
+<pre><code class="language-cpp">intervals[idx].max_prefix_sum = max(
+    // max prefix sum in left part
+    intervals[LEFT_CHILD(idx)].max_prefix_sum,                                   
+    // max prefix sum in right part
+    intervals[LEFT_CHILD(idx)].sum + intervals[RIGHT_CHILD(idx)].max_prefix_sum
+);
+</code></pre>
+</details>
+<p>一樣概念，這是最大後綴和的合併方式：</p>
+<details><summary>合併最大後綴和，程式碼</summary>
+<pre><code class="language-cpp">intervals[idx].max_suffix_sum = max(
+    // max suffix sum in left part
+    intervals[LEFT_CHILD(idx)].max_suffix_sum + intervals[RIGHT_CHILD(idx)].sum,  
+    // max suffix sum in right part
+    intervals[RIGHT_CHILD(idx)].max_suffix_sum
+);
+</code></pre>
+</details>
+<p>最後再將以上合併的過程套用到修改和查詢即可。</p>
+<h3 id="subtasks"><a class="header" href="#subtasks">Subtasks</a></h3>
+<ol>
+<li>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5000</span></span></span></span>; <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5000</span></span></span></span>.</p>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2.5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">7</span></span></span></span></span></span></span></span></span></span></span>：每次詢問都可以遍歷整個陣列，直接模擬每個操作就可以拿到分數。</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">o</span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span> for all queries.</p>
+<p>因為沒有更新的需求，可以在一開始記錄前綴和 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">i</span><span class="mclose">])</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span></p>
+<p>並透過</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3em;vertical-align:-1.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">{</span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span><span class="mclose">])</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:1em;"></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">1</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>求解。</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">o</span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mclose">}</span></span></span></span> for all queries.</p>
+<p>不用實作「最大前綴和」和「最大後綴和」即可拿到這題子任務的分數。</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">o</span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span><span class="mclose">}</span></span></span></span> for all queries.</p>
+<p>該子任務不需要您完成更新的操作，您可以用此子任務檢查是否只是更新的過程有問題。</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>; <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span>.</p>
+<p>該子任務只會詢問 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span>，因此您不需要在區間查詢的時候特別考慮 Case 2 &amp; Case 3，您可以用此子任務檢查是否只是查詢的過程有問題。</p>
+</li>
+</ol>
+<h2 id="english-editorial"><a class="header" href="#english-editorial">English Editorial</a></h2>
+<p>Following the description in the problem statement, let's start by considering the part about the sum of intervals. Choose specific intervals, store the answers for these intervals, and use these recorded intervals to handle each query and modification through a divide-and-conquer approach.</p>
+<p>Most of the solutions are already provided in the problem statement. Here, we will align and explain some of the content in the statement with the corresponding code.</p>
+<h3 id="implement-details"><a class="header" href="#implement-details">Implement details</a></h3>
+<h3 id="build-1"><a class="header" href="#build-1">Build</a></h3>
+<blockquote>
+<p>Specifically, you can initially use Divide and Conquer to calculate the answer for <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span> and record the answers encountered during the recursion.</p>
+</blockquote>
+<p>In the initial step, employ the divide-and-conquer method to calculate the answers for each interval.</p>
+<p>Referencing the code and comments, here we utilize an array to store the answers in a binary tree fashion:</p>
+<details><summary>Code: Calculate interval sums using a DnC approach</summary>
+<pre><code class="language-cpp">#define LEFT_CHILD(idx) (idx &lt;&lt; 1)
+#define RIGHT_CHILD(idx) ((idx &lt;&lt; 1) | 1)
+
+void GetIntervalSum(int l = 1, int r = n, int idx = 1){
+    if (l == r) {  // leaf node
+        intervals[idx].sum = a[l];
+        return;
+    }
+
+    int m = (l + r) / 2; // divide
+
+    GetIntervalSum(l, m, LEFT_CHILD(idx));      // conquer left part
+    GetIntervalSum(m + 1, r, RIGHT_CHILD(idx)); // conquer right part
+
+    // merge the result of left and right part
+    intervals[idx].sum = intervals[LEFT_CHILD(idx)].sum + intervals[RIGHT_CHILD(idx)].sum;
+}
+</code></pre>
+</details>
+<h3 id="range-query-1"><a class="header" href="#range-query-1">Range Query</a></h3>
+<blockquote>
+<p>Then, to calculate the answer for <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>, you can start from <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span> and employ Divide and Conquer once more.
+During the recursion, for the current interval <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> and the queried interval <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>, there are three situations:</p>
+<ol>
+<li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> is entirely inside <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>. In this case, we can directly add <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span></span></span></span> to our answer.</li>
+<li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> is entirely outside <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>. In this scenario, this interval doesn't affect the answer.</li>
+<li>Otherwise, we can divide it into two subproblems:
+<ol>
+<li>How the answer of the interval <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mclose">]</span></span></span></span> contributes to <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span></span></span></span>.</li>
+<li>How the answer of the interval <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> contributes to <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span></span></span></span>.</li>
+</ol>
+</li>
+</ol>
+</blockquote>
+<p>With the knowledge of the answers for each interval, we can utilize the previously stored information to determine the answer for <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span> using the mentioned method. As the problem statement suggests, we divide the solution into three cases to efficiently apply the divide-and-conquer approach.</p>
+<p>Take a look at the code and comments for reference:</p>
+<details><summary>Code: Range Query</summary>
+<pre><code class="language-cpp">long long QuerySum(int &amp;ql, int &amp;qr, int l = 1, int r = n, int idx = 1) {
+    /*** Case 1 : [l, r] is entirely inside [ql, qr] ***/
+    if (ql &lt;= l &amp;&amp; r &lt;= qr) {  // contain by query range
+        return intervals[idx].sum;
+    }
+
+    /*** Case 2 : [l, r] is entirely outside [ql, qr] ***/
+    if (qr &lt; l || r &lt; ql) {
+        return 0;  // return 0 won't affect the calculation of sum in parent query
+    }
+
+    /*** Case 3 : divide [l, r] into two subproblems ***/
+    int m = (l + r) / 2; // divide
+
+    long long left_part_ans = QuerySum(ql, qr, l, m, LEFT_CHILD(idx)); // conquer left part
+    long long right_part_ans = QuerySum(ql, qr, m + 1, r, RIGHT_CHILD(idx)); // conquer right part
+
+    return left_part_ans + right_part_ans; // merge the result of left and right part
+}
+</code></pre>
+</details>
+<h3 id="update-1"><a class="header" href="#update-1">Update</a></h3>
+<blockquote>
+<p>Treat updates as a range query of <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span></span></span></span>.
+The path of the range query traverses through intervals whose values will be affected if the number changes to <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span>, and we can handle this efficiently.</p>
+</blockquote>
+<p>Regarding the modification operation, we need to identify all intervals affected by the modification and update their answers.</p>
+<p>The affected intervals align with the intervals encountered during the process of querying <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span></span></span></span>. Updating these intervals during the process is sufficient.</p>
+<p>Refer to the code and comments below for clarification:</p>
+<details><summary>Code: Update</summary>
+<pre><code class="language-cpp">void UpdateIntervalSum(int k, int u, int l = 1, int r = n, int idx = 1) {
+    // Treat updates as a range query of [k, k] : ql = qr = k
+
+    /*** Case 1 : [l, r] == [k, k] ***/
+    if (k &lt;= l &amp;&amp; r &lt;= k) {  // leaf node, same as (l == k &amp;&amp; r == k)
+        intervals[idx].sum = u;
+        return;
+    }
+
+    /*** Case 2 : [l, r] is entirely outside [k, k] ***/
+    if (k &lt; l || k &gt; r)  // not affected by update
+        return;
+
+    /*** Case 3 : affected by update, divide [l, r] into two parts ***/
+    int m = (l + r) / 2; // divide
+    
+    Update(k, u, l, m, LEFT_CHILD(idx)); // conquer left part
+    Update(k, u, m + 1, r, RIGHT_CHILD(idx)); // conquer right part
+
+    // Update the sum of current interval by merging the result of left and right part
+    intervals[idx].sum = intervals[LEFT_CHILD(idx)].sum + intervals[RIGHT_CHILD(idx)].sum;
+}
+</code></pre>
+</details>
+<h3 id="merge-maximum-prefix-suffix-sum-1"><a class="header" href="#merge-maximum-prefix-suffix-sum-1">Merge Maximum Prefix (Suffix) Sum</a></h3>
+<blockquote>
+<p>For each interval with a length greater than or equal to <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span>, the maximum prefix sum can only happen in the following two cases:</p>
+<ol>
+<li>we can obtain the candidate answer by considering <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">pmax</span></span><span class="mopen">(</span><span class="mord text"><span class="mord">left interval</span></span><span class="mclose">)</span></span></span></span>.</li>
+<li>we can get the other candidate answer by adding <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">(</span><span class="mord text"><span class="mord">left interval</span></span><span class="mclose">)</span></span></span></span> and <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">pmax</span></span><span class="mopen">(</span><span class="mord text"><span class="mord">right interval</span></span><span class="mclose">)</span></span></span></span>.</li>
+</ol>
+</blockquote>
+<p>The problem statement provides a method for merging the maximum prefix sums. Refer to the corresponding code below for guidance:</p>
+<details><summary>Code: Merge Maximum Prefix Sum</summary>
+<pre><code class="language-cpp">intervals[idx].max_prefix_sum = max(
+    // max prefix sum in left part
+    intervals[LEFT_CHILD(idx)].max_prefix_sum,                                   
+    // max prefix sum in right part
+    intervals[LEFT_CHILD(idx)].sum + intervals[RIGHT_CHILD(idx)].max_prefix_sum
+);
+</code></pre>
+</details>
+<p>Similar concept, here's the merging method for the maximum suffix sums:</p>
+<details><summary>Code: Merge Maximum Suffix Sum</summary>
+<pre><code class="language-cpp">intervals[idx].max_suffix_sum = max(
+    // max suffix sum in left part
+    intervals[LEFT_CHILD(idx)].max_suffix_sum + intervals[RIGHT_CHILD(idx)].sum,  
+    // max suffix sum in right part
+    intervals[RIGHT_CHILD(idx)].max_suffix_sum
+);
+</code></pre>
+</details>
+<p>Finally, apply the merging processes mentioned above to both modification and query operations.</p>
+<h3 id="subtasks-1"><a class="header" href="#subtasks-1">Subtasks</a></h3>
+<ol>
+<li>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5000</span></span></span></span>; <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5000</span></span></span></span>.</p>
+<p>With <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2.5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">7</span></span></span></span></span></span></span></span></span></span></span>, you can iterate through the entire array for each query, simulating each operation directly to achieve the desired score.</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">o</span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span> for all queries.</p>
+<p>Given that there's no need for updates, you can initially record the prefix sum for each <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> in the range <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span>. Then, utilize the formula </p>
+<p><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3em;vertical-align:-1.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">{</span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span><span class="mclose">])</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord">sum</span></span><span class="mopen">([</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">])</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:1em;"></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">1</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>for solving queries.</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">o</span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mclose">}</span></span></span></span> for all queries.</p>
+<p>You can achieve the required score for this subtask without implementing the maximum prefix sum and maximum suffix sum.</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">o</span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span><span class="mclose">}</span></span></span></span> for all queries.</p>
+<p>If the subtask doesn't require you to complete update operations, you can use it to check if only the update process is problematic.</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">ql</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>; <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span>.</p>
+<p>Since the subtask only queries <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span>, you don't need to specifically consider Case 2 &amp; Case 3 during interval queries. You can use this subtask to check if only the query process is problematic.</p>
+</li>
+</ol>
+<h2 id="solutions"><a class="header" href="#solutions">Solutions</a></h2>
+<details><summary>Solution by SorahISA</summary>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+#define int int64_t
+
+int32_t main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int N, Q; cin &gt;&gt; N &gt;&gt; Q;
+    
+    vector&lt;int&gt; arr(N+1);
+    for (int i = 1; i &lt;= N; ++i) cin &gt;&gt; arr[i];
+    
+    vector&lt;pair&lt;int, int&gt;&gt; ch(2*N);
+    vector&lt;int&gt; sum(2*N), pmx(2*N), smx(2*N);
+    
+    function&lt;int(int, int, int&amp;)&gt;
+    init = [&amp;](int L, int R, int &amp;tok) {
+        int id = tok++;
+        if (L == R) {
+            ch[id] = {-1, -1};
+            sum[id] = arr[L];
+            pmx[id] = smx[id] = max(arr[L], int(0));
+            return id;
+        }
+        
+        int M = (L + R) &gt;&gt; 1;
+        int id_l = init(L, M, tok);
+        int id_r = init(M+1, R, tok);
+        
+        ch[id] = {id_l, id_r};
+        sum[id] = sum[id_l] + sum[id_r];
+        pmx[id] = max(pmx[id_l], sum[id_l] + pmx[id_r]);
+        smx[id] = max(smx[id_r], sum[id_r] + smx[id_l]);
+        return id;
+    };
+    
+    function&lt;void(int, int, int, int, int)&gt;
+    modify = [&amp;](int p, int v, int L, int R, int id) {
+        if (L == R) {
+            arr[L] = v;
+            sum[id] = arr[L];
+            pmx[id] = smx[id] = max(arr[L], int(0));
+            return;
+        }
+        
+        auto [id_l, id_r] = ch[id];
+        
+        int M = (L + R) &gt;&gt; 1;
+        if (p &lt;= M) modify(p, v, L, M, id_l);
+        if (p &gt;  M) modify(p, v, M+1, R, id_r);
+        
+        sum[id] = sum[id_l] + sum[id_r];
+        pmx[id] = max(pmx[id_l], sum[id_l] + pmx[id_r]);
+        smx[id] = max(smx[id_r], sum[id_r] + smx[id_l]);
+    };
+    
+    function&lt;void(int, int, int, int, int, vector&lt;int&gt;&amp;)&gt;
+    query = [&amp;](int l, int r, int L, int R, int id, vector&lt;int&gt; &amp;ids) {
+        if (l &lt;= L and R &lt;= r) {
+            ids.emplace_back(id);
+            return;
+        }
+        
+        auto [id_l, id_r] = ch[id];
+        
+        int M = (L + R) &gt;&gt; 1;
+        if (l &lt;= M) query(l, r, L, M, id_l, ids);
+        if (r &gt;  M) query(l, r, M+1, R, id_r, ids);
+    };
+    
+    {int tok = 0; init(1, N, tok);}
+    
+    for (int q = 1; q &lt;= Q; ++q) {
+        int op; cin &gt;&gt; op;
+        if (op == 1) {
+            int k, u; cin &gt;&gt; k &gt;&gt; u;
+            modify(k, u, 1, N, 0);
+        }
+        else {
+            int ql, qr; cin &gt;&gt; ql &gt;&gt; qr;
+            vector&lt;int&gt; ids; query(ql, qr, 1, N, 0, ids);
+            int _sum = 0, _pmx = 0, _smx = 0;
+            for (int id : ids) {
+                _pmx = max(_pmx, _sum + pmx[id]);
+                _smx = max(_smx + sum[id], smx[id]);
+                _sum += sum[id];
+            }
+            if (op == 2) cout &lt;&lt; _sum &lt;&lt; &quot;\n&quot;;
+            if (op == 3) cout &lt;&lt; _pmx &lt;&lt; &quot;\n&quot;;
+            if (op == 4) cout &lt;&lt; _smx &lt;&lt; &quot;\n&quot;;
+        }
+    }
+    
+    return 0;
+}
+</code></pre>
+</details>
+<h2 id="expected"><a class="header" href="#expected">Expected</a></h2>
+<ul>
+<li>Difficulty: ★★★☆☆</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../editorial/lab2/overview.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../editorial/lab2/D_monkey.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../editorial/lab2/overview.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../editorial/lab2/D_monkey.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

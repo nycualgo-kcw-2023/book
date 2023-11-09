@@ -4,6 +4,7 @@ int fpow(int base, int exp, int mod) {
     // return half * half % mod * (exp & 1 ? base : 1) % mod;
     if (exp % 2 == 0)
         return half * half % mod;
-    else
+    else /// remember to take mod to reduce the maximum value during calculation ///
         return half * half % mod * base % mod;
+    /*                     ^^^^^                                                  */
 }

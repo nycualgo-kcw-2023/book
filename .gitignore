@@ -1,10 +1,9 @@
 
-editorial/lab2/*
-!editorial/lab2/overview.html
+# editorial/lab2/*
 
-editorial/lab1/**/D*
+# editorial/lab1/**/D*
 
-editorial/lab0/**/B*
-editorial/lab0/**/E*
-editorial/lab0/**/H*
-editorial/lab0/**/I*
+# editorial/lab0/**/B*
+# editorial/lab0/**/E*
+# editorial/lab0/**/H*
+# editorial/lab0/**/I*

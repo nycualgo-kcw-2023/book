@@ -196,9 +196,8 @@
 <p>當你面對（剛好打不過）某個怪物，但等級比他低的怪物都打得過時，優先打等級最大或是最小的怪物會是最佳解？</p>
 <p>當打怪升級到可以挑戰新的一批怪物時，要怎麼維護好目前還沒打的低等級怪物，又同時顧及新的一批怪物？</p>
 <p>從初始狀態開始考慮，先把排序後的怪物分成打得過跟打不過兩區。嘗試用簡易的資料結構維護當前打得過的怪物，並且可以優先取得當前最適合挑戰的怪物。你會發現用 stack 可以達成這個效果，只要放怪物進去的順序有按照最優解的策略，則可以保證拿出來的怪物也會是當前最佳挑戰的怪物。</p>
-<details><summary>Sample Code (Non-Public Now)</summary>
-<!-- ```cpp
-#include <bits/stdc++.h>
+<details><summary>Sample Code</summary>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
 using namespace std;
 
 using int64 = long long;
@@ -208,29 +207,29 @@ const int64 INF = 1E16;
 int main() {
     ios_base::sync_with_stdio(0), cin.tie(0);
     
-    int N, Q; cin >> N >> Q;
+    int N, Q; cin &gt;&gt; N &gt;&gt; Q;
     
-    vector<int64> V(N), pre;
-    for (int64 &x : V) cin >> x;
+    vector&lt;int64&gt; V(N), pre;
+    for (int64 &amp;x : V) cin &gt;&gt; x;
     V.emplace_back(INF);
     sort(begin(V), end(V));
     
-    for (int q = 1; q <= Q; ++q) {
-        int64 X, Y; cin >> X >> Y;
+    for (int q = 1; q &lt;= Q; ++q) {
+        int64 X, Y; cin &gt;&gt; X &gt;&gt; Y;
         
-        stack<int> alive;
+        stack&lt;int&gt; alive;
         int cnt = 0;
-        for (int i = 0; i <= N and X < Y; ++i) {
-            while (alive.size() and X < min(V[i], Y)) X += alive.top(), alive.pop(), ++cnt;
-            if (X < min(V[i], Y)) { cnt = -1; break; }
+        for (int i = 0; i &lt;= N and X &lt; Y; ++i) {
+            while (alive.size() and X &lt; min(V[i], Y)) X += alive.top(), alive.pop(), ++cnt;
+            if (X &lt; min(V[i], Y)) { cnt = -1; break; }
             alive.emplace(V[i]);
         }
-        cout << cnt << "\n";
+        cout &lt;&lt; cnt &lt;&lt; &quot;\n&quot;;
     }
     
     return 0;
 }
-``` -->
+</code></pre>
 </details>
 <h3 id="subtask-3"><a class="header" href="#subtask-3">Subtask 3</a></h3>
 <p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.786em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span></span></span></span> 又 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7804em;vertical-align:-0.136em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.786em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span></span></span></span>，可知初始等級就可打敗所有的怪物。你能試著證明，優先挑戰等級最高的怪物，是最佳策略嗎？</p>
@@ -256,9 +255,8 @@ int main() {
 <p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> 是一開始的排序。</p>
 </li>
 </ul>
-<details><summary>Sample Code (Non-Public Now)</summary>
-<!-- ```cpp
-#include <bits/stdc++.h>
+<details><summary>Sample Code</summary>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
 using namespace std;
 
 using int64 = long long;
@@ -268,27 +266,27 @@ const int64 INF = 1E16;
 int main() {
     ios_base::sync_with_stdio(0), cin.tie(0);
     
-    int N, Q; cin >> N >> Q;
+    int N, Q; cin &gt;&gt; N &gt;&gt; Q;
     
-    vector<int64> V(N), pre;
-    for (int64 &x : V) cin >> x;
+    vector&lt;int64&gt; V(N), pre;
+    for (int64 &amp;x : V) cin &gt;&gt; x;
     V.emplace_back(INF);
     sort(begin(V), end(V));
     partial_sum(begin(V), end(V), back_inserter(pre));
     
-    auto sum = [&](int L, int R) -> int64 { return pre[R] - pre[L] + V[L]; };
+    auto sum = [&amp;](int L, int R) -&gt; int64 { return pre[R] - pre[L] + V[L]; };
     
-    for (int q = 1; q <= Q; ++q) {
-        int64 X, Y; cin >> X >> Y;
+    for (int q = 1; q &lt;= Q; ++q) {
+        int64 X, Y; cin &gt;&gt; X &gt;&gt; Y;
         
-        vector<pair<int, int>> alive;
+        vector&lt;pair&lt;int, int&gt;&gt; alive;
         int cnt = 0, lst = 0;
-        while (X < Y) {
+        while (X &lt; Y) {
             int pos = upper_bound(begin(V), end(V), X) - begin(V);
             int64 goal = min(V[pos], Y);
             alive.emplace_back(lst, pos - 1);
             
-            while (alive.size() and X + sum(alive.back().first, alive.back().second) < goal) {
+            while (alive.size() and X + sum(alive.back().first, alive.back().second) &lt; goal) {
                 X += sum(alive.back().first, alive.back().second);
                 cnt += alive.back().second - alive.back().first + 1;
                 alive.pop_back();
@@ -298,25 +296,25 @@ int main() {
             
             auto [L, R] = alive.back();
             int lo = L, hi = R, mi;
-            while (lo < hi) {
-                mi = (lo + hi + 1) >> 1;
-                if (X + sum(mi, R) < goal) hi = mi - 1;
+            while (lo &lt; hi) {
+                mi = (lo + hi + 1) &gt;&gt; 1;
+                if (X + sum(mi, R) &lt; goal) hi = mi - 1;
                 else                       lo = mi;
             }
             
             X += sum(lo, R);
             cnt += R - lo + 1;
             alive.back().second = lo - 1;
-            if (alive.back().first > alive.back().second) alive.pop_back();
+            if (alive.back().first &gt; alive.back().second) alive.pop_back();
             
             lst = pos;
         }
-        cout << cnt << "\n";
+        cout &lt;&lt; cnt &lt;&lt; &quot;\n&quot;;
     }
     
     return 0;
 }
-``` -->
+</code></pre>
 </details>
 <h2 id="english-editorial"><a class="header" href="#english-editorial">English Editorial</a></h2>
 <p>Firstly, sort the monsters in ascending order of their levels.</p>
@@ -327,9 +325,8 @@ int main() {
 <p>When facing a monster that cannot be defeated (just barely), but all monsters with lower levels have been defeated, is it optimal to prioritize attacking the monster with the highest or lowest level?</p>
 <p>When upgrading to a level where new monsters can be challenged, how to maintain the lower-level monsters that have not been defeated yet, while also taking into account the new batch of monsters?</p>
 <p>Starting from the initial state, divide the sorted monsters into two regions: those that can be defeated and those that cannot. Try using a simple data structure to maintain the currently defeatable monsters and prioritize obtaining the monster that is currently the most suitable to challenge. You will find that using a stack can achieve this effect, as long as the order in which monsters are placed in it follows the optimal strategy. This ensures that the monster taken out will also be the best challenger at the moment.</p>
-<details><summary>Sample Code (Non-Public Now)</summary>
-<!-- ```cpp
-#include <bits/stdc++.h>
+<details><summary>Sample Code</summary>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
 using namespace std;
 
 using int64 = long long;
@@ -339,29 +336,29 @@ const int64 INF = 1E16;
 int main() {
     ios_base::sync_with_stdio(0), cin.tie(0);
     
-    int N, Q; cin >> N >> Q;
+    int N, Q; cin &gt;&gt; N &gt;&gt; Q;
     
-    vector<int64> V(N), pre;
-    for (int64 &x : V) cin >> x;
+    vector&lt;int64&gt; V(N), pre;
+    for (int64 &amp;x : V) cin &gt;&gt; x;
     V.emplace_back(INF);
     sort(begin(V), end(V));
     
-    for (int q = 1; q <= Q; ++q) {
-        int64 X, Y; cin >> X >> Y;
+    for (int q = 1; q &lt;= Q; ++q) {
+        int64 X, Y; cin &gt;&gt; X &gt;&gt; Y;
         
-        stack<int> alive;
+        stack&lt;int&gt; alive;
         int cnt = 0;
-        for (int i = 0; i <= N and X < Y; ++i) {
-            while (alive.size() and X < min(V[i], Y)) X += alive.top(), alive.pop(), ++cnt;
-            if (X < min(V[i], Y)) { cnt = -1; break; }
+        for (int i = 0; i &lt;= N and X &lt; Y; ++i) {
+            while (alive.size() and X &lt; min(V[i], Y)) X += alive.top(), alive.pop(), ++cnt;
+            if (X &lt; min(V[i], Y)) { cnt = -1; break; }
             alive.emplace(V[i]);
         }
-        cout << cnt << "\n";
+        cout &lt;&lt; cnt &lt;&lt; &quot;\n&quot;;
     }
     
     return 0;
 }
-``` -->
+</code></pre>
 </details>
 <h3 id="subtask-3-1"><a class="header" href="#subtask-3-1">Subtask 3</a></h3>
 <p>With <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.786em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span></span></span></span> and <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7804em;vertical-align:-0.136em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.786em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span></span></span></span>, it is known that the initial level can defeat all monsters. Can you try to prove that prioritizing challenging the highest-level monster is the optimal strategy?</p>
@@ -387,9 +384,8 @@ int main() {
 <p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> is for the initial sorting.</p>
 </li>
 </ul>
-<details><summary>Sample Code (Non-Public Now)</summary>
-<!-- ```cpp
-#include <bits/stdc++.h>
+<details><summary>Sample Code</summary>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
 using namespace std;
 
 using int64 = long long;
@@ -399,27 +395,27 @@ const int64 INF = 1E16;
 int main() {
     ios_base::sync_with_stdio(0), cin.tie(0);
     
-    int N, Q; cin >> N >> Q;
+    int N, Q; cin &gt;&gt; N &gt;&gt; Q;
     
-    vector<int64> V(N), pre;
-    for (int64 &x : V) cin >> x;
+    vector&lt;int64&gt; V(N), pre;
+    for (int64 &amp;x : V) cin &gt;&gt; x;
     V.emplace_back(INF);
     sort(begin(V), end(V));
     partial_sum(begin(V), end(V), back_inserter(pre));
     
-    auto sum = [&](int L, int R) -> int64 { return pre[R] - pre[L] + V[L]; };
+    auto sum = [&amp;](int L, int R) -&gt; int64 { return pre[R] - pre[L] + V[L]; };
     
-    for (int q = 1; q <= Q; ++q) {
-        int64 X, Y; cin >> X >> Y;
+    for (int q = 1; q &lt;= Q; ++q) {
+        int64 X, Y; cin &gt;&gt; X &gt;&gt; Y;
         
-        vector<pair<int, int>> alive;
+        vector&lt;pair&lt;int, int&gt;&gt; alive;
         int cnt = 0, lst = 0;
-        while (X < Y) {
+        while (X &lt; Y) {
             int pos = upper_bound(begin(V), end(V), X) - begin(V);
             int64 goal = min(V[pos], Y);
             alive.emplace_back(lst, pos - 1);
             
-            while (alive.size() and X + sum(alive.back().first, alive.back().second) < goal) {
+            while (alive.size() and X + sum(alive.back().first, alive.back().second) &lt; goal) {
                 X += sum(alive.back().first, alive.back().second);
                 cnt += alive.back().second - alive.back().first + 1;
                 alive.pop_back();
@@ -429,25 +425,25 @@ int main() {
             
             auto [L, R] = alive.back();
             int lo = L, hi = R, mi;
-            while (lo < hi) {
-                mi = (lo + hi + 1) >> 1;
-                if (X + sum(mi, R) < goal) hi = mi - 1;
+            while (lo &lt; hi) {
+                mi = (lo + hi + 1) &gt;&gt; 1;
+                if (X + sum(mi, R) &lt; goal) hi = mi - 1;
                 else                       lo = mi;
             }
             
             X += sum(lo, R);
             cnt += R - lo + 1;
             alive.back().second = lo - 1;
-            if (alive.back().first > alive.back().second) alive.pop_back();
+            if (alive.back().first &gt; alive.back().second) alive.pop_back();
             
             lst = pos;
         }
-        cout << cnt << "\n";
+        cout &lt;&lt; cnt &lt;&lt; &quot;\n&quot;;
     }
     
     return 0;
 }
-``` -->
+</code></pre>
 </details>
 <h2 id="expected--reality"><a class="header" href="#expected--reality">Expected / Reality</a></h2>
 <ul>

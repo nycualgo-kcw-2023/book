@@ -294,9 +294,8 @@
 <h3 id="subtask-6"><a class="header" href="#subtask-6">Subtask 6</a></h3>
 <p>In this subtask, each mode might have several children nodes, so we need a data structure to record the children of each node (since if you iterate through all the nodes to get the children every time, you will get <strong>TLE</strong>). Here, we provide you a solution with <strong>adjacency matrix</strong> (which is an array of set).  When you scan node 1 is the parent of node 2, you will insert <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span> into array[1]’s set. This is helpful when you need to update a node’s children to its parent, as you only need to insert the set into its parent’s set.</p>
 <h2 id="solutions"><a class="header" href="#solutions">Solutions</a></h2>
-<details><summary>Solution (Non-Public Now)</summary>
-<!-- ```cpp
-#include <bits/stdc++.h>
+<details><summary>Solution</summary>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
 #define i128 __int128
 using namespace std;
 
@@ -304,28 +303,28 @@ typedef struct Node{
     int id;
     i128 mult;
     i128 add;
-    vector<int> order;
+    vector&lt;int&gt; order;
 } Node;
 
 struct cmp{
-    bool operator()(Node &a, Node &b){
+    bool operator()(Node &amp;a, Node &amp;b){
         if(a.mult==1) return false;
         if(b.mult==1) return true;
         
-        return a.add*(b.mult-1)<b.add*(a.mult-1);
+        return a.add*(b.mult-1)&lt;b.add*(a.mult-1);
     }
 };
 
-ostream& operator << (ostream &os, const i128 &x) {
-    if (x == 0) return os << "0";
+ostream&amp; operator &lt;&lt; (ostream &amp;os, const i128 &amp;x) {
+    if (x == 0) return os &lt;&lt; &quot;0&quot;;
     i128 tmp = x;
-    int sign = (tmp > 0 ? 1 : -1);
-    if (tmp < 0) tmp *= -1;
+    int sign = (tmp &gt; 0 ? 1 : -1);
+    if (tmp &lt; 0) tmp *= -1;
     string ret;
     while (tmp) ret += char('0' + tmp % 10), tmp /= 10;
-    if (sign == -1) ret += "-";
+    if (sign == -1) ret += &quot;-&quot;;
     reverse(begin(ret), end(ret));
-    return os << ret;
+    return os &lt;&lt; ret;
 }
 
 i128 inf = pow(10, 18);
@@ -334,25 +333,25 @@ int main(){
     cin.tie(0);
     cin.sync_with_stdio(0);
     int t;
-    cin>>t;
+    cin&gt;&gt;t;
     while(t--){
         int N;
-        cin>>N;
-        vector<int> par(N+1);
-        vector<set<int>> adj(N+1);
-        vector<Node> nodes(N+1);
-        priority_queue<Node, vector<Node>, cmp> pq;
+        cin&gt;&gt;N;
+        vector&lt;int&gt; par(N+1);
+        vector&lt;set&lt;int&gt;&gt; adj(N+1);
+        vector&lt;Node&gt; nodes(N+1);
+        priority_queue&lt;Node, vector&lt;Node&gt;, cmp&gt; pq;
 
-        for(int i = 1;i<=N;i++){
+        for(int i = 1;i&lt;=N;i++){
             int node;
-            cin>>node;
+            cin&gt;&gt;node;
             par[i] = node;
             adj[node].insert(i);
         }
-        for(int i = 1;i<=N;i++){
+        for(int i = 1;i&lt;=N;i++){
             char op;
             int co;
-            cin>>op>>co;
+            cin&gt;&gt;op&gt;&gt;co;
             if(op=='x'){
                 nodes[i] = {i, co, 0, {i}};
             }
@@ -362,7 +361,7 @@ int main(){
             pq.push(nodes[i]);
         }
 
-        vector<bool> traversed(N+1, false);
+        vector&lt;bool&gt; traversed(N+1, false);
         traversed[1] = true;
         
         while(!pq.empty()){
@@ -384,7 +383,7 @@ int main(){
             if(par_node.id!=1) pq.push(par_node);
             
             // update children of current node to it's parent using adj matrix
-            for(auto &i: adj[tmp.id]){
+            for(auto &amp;i: adj[tmp.id]){
                 par[i] = par[tmp.id];
             }
             adj[par[tmp.id]].erase(tmp.id);
@@ -393,19 +392,19 @@ int main(){
         }
 
         i128 ans = nodes[1].mult+nodes[1].add;
-        if(ans>=inf){
-            cout<<"infinite"<<'\n';
+        if(ans&gt;=inf){
+            cout&lt;&lt;&quot;infinite&quot;&lt;&lt;'\n';
         }
         else{
-            cout<<ans<<'\n';
+            cout&lt;&lt;ans&lt;&lt;'\n';
         }
-        for(int i = 0;i<nodes[1].order.size();i++){
-            cout<<nodes[1].order[i]<<' ';
+        for(int i = 0;i&lt;nodes[1].order.size();i++){
+            cout&lt;&lt;nodes[1].order[i]&lt;&lt;' ';
         }
-        cout<<'\n';
+        cout&lt;&lt;'\n';
     }
 }
-``` -->
+</code></pre>
 </details>
 <h2 id="expected--reality"><a class="header" href="#expected--reality">Expected / Reality</a></h2>
 <ul>

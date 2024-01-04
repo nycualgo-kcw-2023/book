@@ -204,6 +204,58 @@
 <details><summary>Hint for Full Solution (Released 2023.12.29)</summary>
 <p>The problem now (almost) boils down to &quot;<strong>finding the longest path in a DAG</strong>,&quot; which is a classical problem in dynamic programming.</p>
 </details>
+<h2 id="editorial"><a class="header" href="#editorial">Editorial</a></h2>
+<h2 id="solutions"><a class="header" href="#solutions">Solutions</a></h2>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mclose">)</span></span></span></span> -- Finding Longest Path on DAG</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n+m)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+const int INF = INT_MAX &gt;&gt; 1;
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int n, m; cin &gt;&gt; n &gt;&gt; m;
+    
+    vector&lt;int&gt; l(n);
+    for (int &amp;x : l) cin &gt;&gt; x;
+    
+    vector&lt;vector&lt;pair&lt;int, int&gt;&gt;&gt; adj(2*n+1);
+    vector&lt;int&gt; deg_i(2*n+1, 0), vis(2*n+1, 0);
+    for (int i = 0; i &lt; 2*n; ++i) {
+        if (l[i&gt;&gt;1] == 0) adj[2*n].emplace_back(i, 0),    ++deg_i[i];
+        else              adj[2*n].emplace_back(i, -INF), ++deg_i[i];
+    }
+    for (int i = 0; i &lt; m; ++i) {
+        int u, v, w; char c; cin &gt;&gt; u &gt;&gt; v &gt;&gt; c &gt;&gt; w, --u, --v;
+        if (c == 'B') adj[u&lt;&lt;1].emplace_back(v&lt;&lt;1|1, w), ++deg_i[v&lt;&lt;1|1];
+        if (c == 'W') adj[u&lt;&lt;1|1].emplace_back(v&lt;&lt;1, w), ++deg_i[v&lt;&lt;1];
+    }
+    
+    vector&lt;int&gt; ans(n, 0);
+    vector&lt;int&gt; dp(2*n+1, 0);
+    function&lt;void(int)&gt; dag_dp = [&amp;](int now) {
+        for (auto [x, star] : adj[now]) {
+            dp[x] = max(dp[x], dp[now] + star);
+            if (++vis[x] == deg_i[x]) {
+                ans[x&gt;&gt;1] = max(ans[x&gt;&gt;1], dp[x]);
+                if (dp[x] &lt; l[x&gt;&gt;1]) dp[x] = -INF;
+                dag_dp(x);
+            }
+        }
+    };
+    dag_dp(2*n);
+    
+    for (int i = 0; i &lt; n; ++i) cout &lt;&lt; ans[i] &lt;&lt; &quot; \n&quot;[i == n-1];
+    
+    return 0;
+}
+</code></pre>
+</details>
 
                     </main>
 

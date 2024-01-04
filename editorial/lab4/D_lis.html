@@ -241,6 +241,219 @@
 <p>Consider <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7804em;vertical-align:-0.136em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> where <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">a</span><span class="mopen">[</span><span class="mord mathnormal">x</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">a</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">]</span></span></span></span>, then <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord texttt">dp</span></span><span class="mopen">[</span><span class="mord mathnormal">x</span><span class="mclose">]</span></span></span></span> is not a valid transition for <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord texttt">dp</span></span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span></span></span></span> since the third condition is violated when <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>.</p>
 </details>
 </details>
+<h2 id="editorial"><a class="header" href="#editorial">Editorial</a></h2>
+<h2 id="solutions"><a class="header" href="#solutions">Solutions</a></h2>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> -- Calculating Sum with one DP</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n^3)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+using i64 = long long;
+
+const i64 mod = 1'000'000'007;
+
+void solve() {
+    int N; cin &gt;&gt; N;
+    
+    vector&lt;i64&gt; A(N+2), nA(N+2);
+    for (int i = 1; i &lt;= N; ++i) cin &gt;&gt; A[i], nA[N+1-i] = mod - A[i];
+    A[0] = 0, A[N+1] = mod;
+    
+    vector&lt;pair&lt;i64, i64&gt;&gt; dp(N+2, {0, 0});
+    dp[0] = {1, 0};
+    for (int i = 1; i &lt;= N+1; ++i) {
+        for (int j = 0; j &lt; i; ++j) {
+            if (A[j] &gt; A[i]) continue;
+            bool valid = true;
+            for (int k = j+1; k &lt;= i-1; ++k) {
+                if (A[j] &lt;= A[k] and A[k] &lt;= A[i]) valid = false;
+            }
+            if (valid) {
+                dp[i].first = (dp[i].first + dp[j].first) % mod;
+                dp[i].second = (dp[i].second + dp[j].second + dp[j].first * A[i]) % mod;
+            }
+        }
+    }
+    
+    i64 cnt = dp[N+1].first, sum = dp[N+1].second;
+    cout &lt;&lt; cnt &lt;&lt; &quot; &quot; &lt;&lt; sum &lt;&lt; &quot;\n&quot;;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int t = 1; cin &gt;&gt; t;
+    for (int _ = 1; _ &lt;= t; ++_) {
+        solve();
+    }
+    
+    return 0;
+}
+</code></pre>
+</details>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> -- Calculating Sum with two DPs</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n^3)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+using i64 = long long;
+
+const int INF = 1'000'000'000 + 5;
+const i64 mod = 1'000'000'007;
+
+vector&lt;i64&gt; solve_dp(int N, vector&lt;i64&gt; A) {
+    vector&lt;i64&gt; dp(N+2, 0);
+    dp[0] = 1;
+    for (int i = 1; i &lt;= N+1; ++i) {
+        for (int j = 0; j &lt; i; ++j) {
+            if (A[j] &gt; A[i]) continue;
+            bool valid = true;
+            for (int k = j+1; k &lt;= i-1; ++k) {
+                if (A[j] &lt;= A[k] and A[k] &lt;= A[i]) valid = false;
+            }
+            if (valid) dp[i] = (dp[i] + dp[j]) % mod;
+        }
+    }
+    return dp;
+}
+
+void solve() {
+    int N; cin &gt;&gt; N;
+    
+    vector&lt;i64&gt; A(N+2), nA(N+2);
+    for (int i = 1; i &lt;= N; ++i) cin &gt;&gt; A[i], nA[N+1-i] = INF - A[i];
+    A[0] = nA[0] = 0, A[N+1] = nA[N+1] = INF;
+    
+    vector&lt;i64&gt; dp = solve_dp(N, A);
+    vector&lt;i64&gt; ndp = solve_dp(N, nA);
+    reverse(begin(ndp), end(ndp));
+    
+    i64 cnt = dp[N+1], sum = 0;
+    for (int i = 1; i &lt;= N; ++i) sum = (sum + dp[i] * ndp[i] % mod * A[i]) % mod;
+    cout &lt;&lt; cnt &lt;&lt; &quot; &quot; &lt;&lt; sum &lt;&lt; &quot;\n&quot;;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int t = 1; cin &gt;&gt; t;
+    for (int _ = 1; _ &lt;= t; ++_) {
+        solve();
+    }
+    
+    return 0;
+}
+</code></pre>
+</details>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1484em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8984em;"><span style="top:-3.1473em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> -- DP with Divide and Conquer</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n log^2 n)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+#define int int64_t
+
+const int INF = 1'000'000'000 + 5;
+const int mod = 1'000'000'007;
+
+struct ID {
+    int a, i, sum;
+    ID (int _a, int _i, int _sum) :
+        a(_a), i(_i), sum(_sum) {}
+    bool operator &lt; (const ID &amp;rhs) { return a &gt; rhs.a; }
+};
+
+vector&lt;int&gt; solve_dp(int N, vector&lt;int&gt; A) {
+    
+    vector&lt;pair&lt;int, int&gt;&gt; disc;
+    for (int i = 0; i &lt;= N+1; ++i) disc.emplace_back(A[i], i);
+    sort(begin(disc), end(disc));
+    
+    vector&lt;int&gt; _id(N+2);
+    for (int i = 0; i &lt;= N+1; ++i) {
+        A[i] = lower_bound(begin(disc), end(disc), pair{A[i], i}) - begin(disc);
+        _id[A[i]] = i;
+    }
+    
+    vector&lt;int&gt; dp(N+2, 0); dp[0] = 1;
+    
+    function&lt;void(vector&lt;int&gt;, int, int)&gt; recur = [&amp;](vector&lt;int&gt; id, int L, int R) {
+        if (L == R) return;
+        
+        int M = (L + R) &gt;&gt; 1;
+        vector&lt;int&gt; id_L, id_R;
+        for (int i : id) (i &lt;= M ? id_L : id_R).emplace_back(i);
+        recur(id_L, L, M);
+        
+        deque&lt;ID&gt; stk_L; /// (a[i], i, prefix_sum)
+        deque&lt;int&gt; stk_R; /// (i)
+        for (int i : id) {
+            if (i &lt;= M) {
+                /// maintain stk with increasing a[i] and decreasing i ([0] is smallest) ///
+                while (stk_L.size() and i &gt; stk_L[0].i) stk_L.pop_front();
+                stk_L.emplace_front(A[i], i, (stk_L.size() ? stk_L[0].sum : 0) + dp[i]);
+            }
+            else {
+                /// maintain stk with increasing a[i] and increasing i ([0] is largest) ///
+                while (stk_R.size() and i &lt; stk_R[0]) stk_R.pop_front();
+                /// query stk_L range sum (back, stk_R[0]) ///
+                if (stk_L.size()) {
+                    auto it = lower_bound(begin(stk_L), end(stk_L), ID{(stk_R.size() ? A[stk_R[0]] : -1), 0, 0});
+                    // while (it != begin(stk_L)) {
+                    //     it = prev(it);
+                    //     dp[i] = (dp[i] + dp[it-&gt;i]) % mod;
+                    //     debug(i, it-&gt;i);
+                    // }
+                    int cnt = (stk_L[0].sum - (it != end(stk_L) ? it-&gt;sum : 0)) % mod;
+                    dp[i] = (dp[i] + cnt) % mod;
+                }
+                stk_R.emplace_front(i);
+            }
+        }
+        
+        recur(id_R, M+1, R);
+    };
+    recur(_id, 0, N+1);
+    
+    return dp;
+}
+
+void solve() {
+    int N; cin &gt;&gt; N;
+    
+    vector&lt;int&gt; A(N+2), nA(N+2);
+    for (int i = 1; i &lt;= N; ++i) cin &gt;&gt; A[i], nA[N+1-i] = INF - A[i];
+    A[0] = nA[0] = 0, A[N+1] = nA[N+1] = INF;
+    
+    vector&lt;int&gt; dp = solve_dp(N, A);
+    vector&lt;int&gt; ndp = solve_dp(N, nA);
+    reverse(begin(ndp), end(ndp));
+    
+    int cnt = dp[N+1], sum = 0;
+    for (int i = 1; i &lt;= N; ++i) sum = (sum + dp[i] * ndp[i] % mod * A[i]) % mod;
+    cout &lt;&lt; cnt &lt;&lt; &quot; &quot; &lt;&lt; sum &lt;&lt; &quot;\n&quot;;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int t = 1; cin &gt;&gt; t;
+    for (int _ = 1; _ &lt;= t; ++_) {
+        solve();
+    }
+    
+    return 0;
+}
+</code></pre>
+</details>
 
                     </main>
 

@@ -207,6 +207,57 @@
 <p>The only two things that matter are the last visited vertex <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> and the absolute difference between the last two verices <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord">∣</span></span></span></span>.</p>
 <p>How may the state be defined? What is the transition between states? In what order should we update the DP tables?</p>
 </details>
+<h2 id="editorial"><a class="header" href="#editorial">Editorial</a></h2>
+<h2 id="solutions"><a class="header" href="#solutions">Solutions</a></h2>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mclose">)</span></span></span></span></summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n log n + m log m)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int N, M, mod; cin &gt;&gt; N &gt;&gt; M &gt;&gt; mod;
+    
+    vector&lt;tuple&lt;int, int, int&gt;&gt; edges(M);
+    for (auto &amp;[s, u, v] : edges) cin &gt;&gt; u &gt;&gt; v, s = v - u;
+    sort(begin(edges), end(edges));
+    
+    vector&lt;int&gt; dp[2];
+    dp[0].assign(N+1, 1), dp[0][0] = 0;
+    dp[1].assign(N+1, 0);
+    
+    auto modadd = [&amp;](int x, int y) -&gt; int { return (x + y &gt;= mod ? x + y - mod : x + y); };
+    
+    for (int step = 1, tok1 = 0, tok2 = 0; step &lt;= N; ++step) {
+        
+        for (int i = step; i &lt;= N; i += step) dp[1][i] = modadd((i+step &lt;= N ? dp[0][i+step] : 0), dp[0][i-step]);
+        while (tok1 &lt; M and get&lt;0&gt;(edges[tok1]) == step) {
+            auto [s, u, v] = edges[tok1++];
+            dp[1][v] = modadd(dp[1][v], dp[0][u]);
+            dp[1][u] = modadd(dp[1][u], dp[0][v]);
+        }
+        
+        for (int i = step; i &lt;= N; i += step) dp[0][i] = modadd(dp[0][i], dp[1][i]), dp[1][i] = 0;
+        while (tok2 &lt; tok1) {
+            auto [s, u, v] = edges[tok2++];
+            dp[0][v] = modadd(dp[0][v], dp[1][v]), dp[1][v] = 0;
+            dp[0][u] = modadd(dp[0][u], dp[1][u]), dp[1][u] = 0;
+        }
+        
+    }
+    
+    int ans = mod - N;
+    for (int i = 1; i &lt;= N; ++i) ans = modadd(ans, dp[0][i]);
+    cout &lt;&lt; ans &lt;&lt; &quot;\n&quot;;
+    
+    return 0;
+}
+</code></pre>
+</details>
 
                     </main>
 

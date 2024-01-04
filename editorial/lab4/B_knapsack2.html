@@ -226,6 +226,84 @@
 <details><summary>Hint for Full Solution (Released 2023.12.18)</summary>
 <p>You may check this blog: <a href="https://codeforces.com/blog/entry/98663" target="_blank">https://codeforces.com/blog/entry/98663</a>.</p>
 </details>
+<h2 id="editorial"><a class="header" href="#editorial">Editorial</a></h2>
+<h2 id="solutions"><a class="header" href="#solutions">Solutions</a></h2>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mclose">)</span></span></span></span> -- Knapsack with Binary Exponentiation</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(C^2 log V)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+#define int int64_t
+
+const int INF = LLONG_MAX &gt;&gt; 1;
+const int maxc = 1200 + 5;
+
+struct State {
+    
+    vector&lt;int&gt; dp;
+    
+    State () { dp.assign(2 * maxc + 1, 0); }
+    
+    int&amp; operator [] (int x)       { return dp[x + maxc]; }
+    int  operator [] (int x) const { return dp[x + maxc]; }
+    
+    State operator * (const State &amp;rhs) const {
+        const State &amp;lhs = *this;
+        State res;
+        for (int i = -maxc; i &lt;= maxc; ++i) {
+            for (int j = max(-maxc, -maxc-i); j &lt;= min(maxc, maxc-i); ++j) {
+                res[i+j] = max(res[i+j], lhs[i] + rhs[j]);
+            }
+        }
+        return res;
+    }
+    
+};
+
+void solve() {
+    int n, V; cin &gt;&gt; n &gt;&gt; V;
+    
+    vector&lt;int&gt; c(n), v(n);
+    for (int &amp;x : c) cin &gt;&gt; x;
+    for (int &amp;x : v) cin &gt;&gt; x;
+    
+    vector&lt;int&gt; best(maxc, 0);
+    for (int i = 0; i &lt; n; ++i) best[c[i]] = max(best[c[i]], v[i]);
+    
+    State base, ans;
+    for (int i = 0; i &lt;= 2*maxc; ++i) {
+        for (int j = 1; j &lt;= min(i, maxc-1); ++j) {
+            base.dp[i] = max(base.dp[i], base.dp[i-j] + best[j]);
+        }
+    }
+    for (int i = -maxc; i &lt;= maxc; ++i) ans[i] = (i &lt; 0 ? -INF : base[i - maxc]);
+    
+    // assert(base.dp == (ans * base).dp);
+    
+    int exp = V / maxc;
+    while (exp) {
+        if (exp &amp; 1) ans = ans * base;
+        exp &gt;&gt;= 1, base = base * base;
+    }
+    
+    cout &lt;&lt; ans[V % maxc] &lt;&lt; &quot;\n&quot;;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int t = 1; cin &gt;&gt; t;
+    for (int _ = 1; _ &lt;= t; ++_) {
+        solve();
+    }
+    
+    return 0;
+}
+</code></pre>
+</details>
 <div class="footnote-definition" id="partition_number"><sup class="footnote-definition-label">1</sup>
 <p><a href="https://oeis.org/A000041" target="_blank">https://oeis.org/A000041</a></p>
 </div>

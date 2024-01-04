@@ -282,6 +282,195 @@ for (S be the subset of U) { /* and all subset of S is enumerated */
 <p>You can check the bit one by one, or you may check out <code>__builtin_popcount</code> / <code>std::popcount</code>.</p>
 </details>
 </details>
+<h2 id="editorial"><a class="header" href="#editorial">Editorial</a></h2>
+<h2 id="solutions"><a class="header" href="#solutions">Solutions</a></h2>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> -- Enumerate Superset of <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span></span></span></span></summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(4^n)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+const int INF = INT_MAX &gt;&gt; 1;
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int n; cin &gt;&gt; n;
+    unsigned U = (1 &lt;&lt; n) - 1;
+    
+    vector&lt;vector&lt;int&gt;&gt; c(n, vector&lt;int&gt;(n, 0));
+    for (auto &amp;vec : c) for (int &amp;x : vec) cin &gt;&gt; x;
+    
+    vector&lt;int&gt; cost(U+1, 0);
+    for (unsigned S = 0; S &lt;= U; ++S) {
+        if (popcount(S) == 1) cost[S] = INF;
+        else {
+            for (int i = 0; i &lt; n; ++i) {
+                if (~S &gt;&gt; i &amp; 1) continue;
+                for (int j = i+1; j &lt; n; ++j) {
+                    if (~S &gt;&gt; j &amp; 1) continue;
+                    cost[S] += c[i][j];
+                }
+            }
+        }
+    }
+    
+    vector&lt;int&gt; dp(U+1, INF), fr(U+1, 0);
+    dp[0] = 0;
+    for (unsigned S = 0; S &lt;= U; ++S) {
+        for (unsigned T = S+1; T &lt;= U; ++T) {
+            if ((S &amp; T) == 0 and dp[S | T] &gt; dp[S] + cost[T]) {
+                dp[S | T] = dp[S] + cost[T];
+                fr[S | T] = T;
+            }
+        }
+    }
+    
+    vector&lt;int&gt; ans(n, 0);
+    int tok = 0;
+    unsigned now = U;
+    while (now) {
+        ++tok;
+        
+        unsigned ids = fr[now];
+        while (ids) ans[__lg(ids &amp; -ids)] = tok, ids -= ids &amp; -ids;
+        
+        now ^= fr[now];
+    }
+    
+    cout &lt;&lt; dp.back() &lt;&lt; &quot;\n&quot;;
+    for (int i = 0; i &lt; n; ++i) cout &lt;&lt; ans[i] &lt;&lt; &quot; \n&quot;[i == n-1];
+    
+    return 0;
+}
+</code></pre>
+</details>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> -- Enumerate Subset of <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span></span></span></span></summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(4^n)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+const int INF = INT_MAX &gt;&gt; 1;
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int n; cin &gt;&gt; n;
+    unsigned U = (1 &lt;&lt; n) - 1;
+    
+    vector&lt;vector&lt;int&gt;&gt; c(n, vector&lt;int&gt;(n, 0));
+    for (auto &amp;vec : c) for (int &amp;x : vec) cin &gt;&gt; x;
+    
+    vector&lt;int&gt; cost(U+1, 0);
+    for (unsigned S = 0; S &lt;= U; ++S) {
+        if (popcount(S) == 1) cost[S] = INF;
+        else {
+            for (int i = 0; i &lt; n; ++i) {
+                if (~S &gt;&gt; i &amp; 1) continue;
+                for (int j = i+1; j &lt; n; ++j) {
+                    if (~S &gt;&gt; j &amp; 1) continue;
+                    cost[S] += c[i][j];
+                }
+            }
+        }
+    }
+    
+    vector&lt;int&gt; dp(U+1, INF), fr(U+1, 0);
+    dp[0] = 0;
+    for (unsigned S = 1; S &lt;= U; ++S) {
+        for (unsigned T = S; T &gt;= 1; --T) {
+            if ((S &amp; T) == T and dp[S] &gt; dp[S ^ T] + cost[T]) {
+                dp[S] = dp[S ^ T] + cost[T];
+                fr[S] = T;
+            }
+        }
+    }
+    
+    vector&lt;int&gt; ans(n, 0);
+    int tok = 0;
+    unsigned now = U;
+    while (now) {
+        ++tok;
+        
+        unsigned ids = fr[now];
+        while (ids) ans[__lg(ids &amp; -ids)] = tok, ids -= ids &amp; -ids;
+        
+        now ^= fr[now];
+    }
+    
+    cout &lt;&lt; dp.back() &lt;&lt; &quot;\n&quot;;
+    for (int i = 0; i &lt; n; ++i) cout &lt;&lt; ans[i] &lt;&lt; &quot; \n&quot;[i == n-1];
+    
+    return 0;
+}
+</code></pre>
+</details>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(2^n n^2)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+const int INF = INT_MAX &gt;&gt; 1;
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int n; cin &gt;&gt; n;
+    int U = (1 &lt;&lt; n) - 1;
+    
+    vector&lt;vector&lt;int&gt;&gt; c(n, vector&lt;int&gt;(n));
+    for (auto &amp;vec : c) for (int &amp;x : vec) cin &gt;&gt; x;
+    
+    vector&lt;vector&lt;int&gt;&gt; cost2(n, vector&lt;int&gt;(n));
+    vector&lt;vector&lt;vector&lt;int&gt;&gt;&gt; cost3(n, vector&lt;vector&lt;int&gt;&gt;(n, vector&lt;int&gt;(n)));
+    for (int i = 0; i &lt; n; ++i) for (int j = i+1; j &lt; n; ++j) cost2[i][j] = c[i][j];
+    for (int i = 0; i &lt; n; ++i) for (int j = i+1; j &lt; n; ++j) for (int k = j+1; k &lt; n; ++k) cost3[i][j][k] = c[i][j] + c[i][k] + c[j][k];
+    
+    vector&lt;int&gt; dp(U+1, INF), fr(U+1, -1); dp[0] = 0;
+    for (int mask = 1; mask &lt;= U; ++mask) {
+        int i = __lg(mask &amp; -mask);
+        for (int j = i+1; j &lt; n; ++j) {
+            if (~mask &gt;&gt; j &amp; 1) continue;
+            if (dp[mask] &gt; dp[mask^(1&lt;&lt;i)^(1&lt;&lt;j)] + cost2[i][j]) {
+                dp[mask] = dp[mask^(1&lt;&lt;i)^(1&lt;&lt;j)] + cost2[i][j];
+                fr[mask] = (1&lt;&lt;i) | (1&lt;&lt;j);
+            }
+            for (int k = j+1; k &lt; n; ++k) {
+                if (~mask &gt;&gt; k &amp; 1) continue;
+                if (dp[mask] &gt; dp[mask^(1&lt;&lt;i)^(1&lt;&lt;j)^(1&lt;&lt;k)] + cost3[i][j][k]) {
+                    dp[mask] = dp[mask^(1&lt;&lt;i)^(1&lt;&lt;j)^(1&lt;&lt;k)] + cost3[i][j][k];
+                    fr[mask] = (1&lt;&lt;i) | (1&lt;&lt;j) | (1&lt;&lt;k);
+                }
+            }
+        }
+    }
+    
+    vector&lt;int&gt; ans(n, 0);
+    int now = U, tok = 0;
+    while (now) {
+        ++tok;
+        
+        int ids = fr[now];
+        while (ids) ans[__lg(ids &amp; -ids)] = tok, ids -= ids &amp; -ids;
+        
+        now ^= fr[now];
+    }
+    
+    cout &lt;&lt; dp.back() &lt;&lt; &quot;\n&quot;;
+    for (int i = 0; i &lt; n; ++i) cout &lt;&lt; ans[i] &lt;&lt; &quot; \n&quot;[i == n-1];
+    
+    return 0;
+}
+</code></pre>
+</details>
 
                     </main>
 

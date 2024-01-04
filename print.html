@@ -5494,6 +5494,195 @@ for (S be the subset of U) { /* and all subset of S is enumerated */
 <p>You can check the bit one by one, or you may check out <code>__builtin_popcount</code> / <code>std::popcount</code>.</p>
 </details>
 </details>
+<h2 id="editorial-10"><a class="header" href="#editorial-10">Editorial</a></h2>
+<h2 id="solutions-17"><a class="header" href="#solutions-17">Solutions</a></h2>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> -- Enumerate Superset of <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span></span></span></span></summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(4^n)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+const int INF = INT_MAX &gt;&gt; 1;
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int n; cin &gt;&gt; n;
+    unsigned U = (1 &lt;&lt; n) - 1;
+    
+    vector&lt;vector&lt;int&gt;&gt; c(n, vector&lt;int&gt;(n, 0));
+    for (auto &amp;vec : c) for (int &amp;x : vec) cin &gt;&gt; x;
+    
+    vector&lt;int&gt; cost(U+1, 0);
+    for (unsigned S = 0; S &lt;= U; ++S) {
+        if (popcount(S) == 1) cost[S] = INF;
+        else {
+            for (int i = 0; i &lt; n; ++i) {
+                if (~S &gt;&gt; i &amp; 1) continue;
+                for (int j = i+1; j &lt; n; ++j) {
+                    if (~S &gt;&gt; j &amp; 1) continue;
+                    cost[S] += c[i][j];
+                }
+            }
+        }
+    }
+    
+    vector&lt;int&gt; dp(U+1, INF), fr(U+1, 0);
+    dp[0] = 0;
+    for (unsigned S = 0; S &lt;= U; ++S) {
+        for (unsigned T = S+1; T &lt;= U; ++T) {
+            if ((S &amp; T) == 0 and dp[S | T] &gt; dp[S] + cost[T]) {
+                dp[S | T] = dp[S] + cost[T];
+                fr[S | T] = T;
+            }
+        }
+    }
+    
+    vector&lt;int&gt; ans(n, 0);
+    int tok = 0;
+    unsigned now = U;
+    while (now) {
+        ++tok;
+        
+        unsigned ids = fr[now];
+        while (ids) ans[__lg(ids &amp; -ids)] = tok, ids -= ids &amp; -ids;
+        
+        now ^= fr[now];
+    }
+    
+    cout &lt;&lt; dp.back() &lt;&lt; &quot;\n&quot;;
+    for (int i = 0; i &lt; n; ++i) cout &lt;&lt; ans[i] &lt;&lt; &quot; \n&quot;[i == n-1];
+    
+    return 0;
+}
+</code></pre>
+</details>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> -- Enumerate Subset of <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span></span></span></span></summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(4^n)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+const int INF = INT_MAX &gt;&gt; 1;
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int n; cin &gt;&gt; n;
+    unsigned U = (1 &lt;&lt; n) - 1;
+    
+    vector&lt;vector&lt;int&gt;&gt; c(n, vector&lt;int&gt;(n, 0));
+    for (auto &amp;vec : c) for (int &amp;x : vec) cin &gt;&gt; x;
+    
+    vector&lt;int&gt; cost(U+1, 0);
+    for (unsigned S = 0; S &lt;= U; ++S) {
+        if (popcount(S) == 1) cost[S] = INF;
+        else {
+            for (int i = 0; i &lt; n; ++i) {
+                if (~S &gt;&gt; i &amp; 1) continue;
+                for (int j = i+1; j &lt; n; ++j) {
+                    if (~S &gt;&gt; j &amp; 1) continue;
+                    cost[S] += c[i][j];
+                }
+            }
+        }
+    }
+    
+    vector&lt;int&gt; dp(U+1, INF), fr(U+1, 0);
+    dp[0] = 0;
+    for (unsigned S = 1; S &lt;= U; ++S) {
+        for (unsigned T = S; T &gt;= 1; --T) {
+            if ((S &amp; T) == T and dp[S] &gt; dp[S ^ T] + cost[T]) {
+                dp[S] = dp[S ^ T] + cost[T];
+                fr[S] = T;
+            }
+        }
+    }
+    
+    vector&lt;int&gt; ans(n, 0);
+    int tok = 0;
+    unsigned now = U;
+    while (now) {
+        ++tok;
+        
+        unsigned ids = fr[now];
+        while (ids) ans[__lg(ids &amp; -ids)] = tok, ids -= ids &amp; -ids;
+        
+        now ^= fr[now];
+    }
+    
+    cout &lt;&lt; dp.back() &lt;&lt; &quot;\n&quot;;
+    for (int i = 0; i &lt; n; ++i) cout &lt;&lt; ans[i] &lt;&lt; &quot; \n&quot;[i == n-1];
+    
+    return 0;
+}
+</code></pre>
+</details>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(2^n n^2)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+const int INF = INT_MAX &gt;&gt; 1;
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int n; cin &gt;&gt; n;
+    int U = (1 &lt;&lt; n) - 1;
+    
+    vector&lt;vector&lt;int&gt;&gt; c(n, vector&lt;int&gt;(n));
+    for (auto &amp;vec : c) for (int &amp;x : vec) cin &gt;&gt; x;
+    
+    vector&lt;vector&lt;int&gt;&gt; cost2(n, vector&lt;int&gt;(n));
+    vector&lt;vector&lt;vector&lt;int&gt;&gt;&gt; cost3(n, vector&lt;vector&lt;int&gt;&gt;(n, vector&lt;int&gt;(n)));
+    for (int i = 0; i &lt; n; ++i) for (int j = i+1; j &lt; n; ++j) cost2[i][j] = c[i][j];
+    for (int i = 0; i &lt; n; ++i) for (int j = i+1; j &lt; n; ++j) for (int k = j+1; k &lt; n; ++k) cost3[i][j][k] = c[i][j] + c[i][k] + c[j][k];
+    
+    vector&lt;int&gt; dp(U+1, INF), fr(U+1, -1); dp[0] = 0;
+    for (int mask = 1; mask &lt;= U; ++mask) {
+        int i = __lg(mask &amp; -mask);
+        for (int j = i+1; j &lt; n; ++j) {
+            if (~mask &gt;&gt; j &amp; 1) continue;
+            if (dp[mask] &gt; dp[mask^(1&lt;&lt;i)^(1&lt;&lt;j)] + cost2[i][j]) {
+                dp[mask] = dp[mask^(1&lt;&lt;i)^(1&lt;&lt;j)] + cost2[i][j];
+                fr[mask] = (1&lt;&lt;i) | (1&lt;&lt;j);
+            }
+            for (int k = j+1; k &lt; n; ++k) {
+                if (~mask &gt;&gt; k &amp; 1) continue;
+                if (dp[mask] &gt; dp[mask^(1&lt;&lt;i)^(1&lt;&lt;j)^(1&lt;&lt;k)] + cost3[i][j][k]) {
+                    dp[mask] = dp[mask^(1&lt;&lt;i)^(1&lt;&lt;j)^(1&lt;&lt;k)] + cost3[i][j][k];
+                    fr[mask] = (1&lt;&lt;i) | (1&lt;&lt;j) | (1&lt;&lt;k);
+                }
+            }
+        }
+    }
+    
+    vector&lt;int&gt; ans(n, 0);
+    int now = U, tok = 0;
+    while (now) {
+        ++tok;
+        
+        int ids = fr[now];
+        while (ids) ans[__lg(ids &amp; -ids)] = tok, ids -= ids &amp; -ids;
+        
+        now ^= fr[now];
+    }
+    
+    cout &lt;&lt; dp.back() &lt;&lt; &quot;\n&quot;;
+    for (int i = 0; i &lt; n; ++i) cout &lt;&lt; ans[i] &lt;&lt; &quot; \n&quot;[i == n-1];
+    
+    return 0;
+}
+</code></pre>
+</details>
 <div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="b-knapsack-problem-real"><a class="header" href="#b-knapsack-problem-real">B. Knapsack Problem (Real)</a></h1>
 <ul>
@@ -5547,6 +5736,84 @@ for (S be the subset of U) { /* and all subset of S is enumerated */
 <details><summary>Hint for Full Solution (Released 2023.12.18)</summary>
 <p>You may check this blog: <a href="https://codeforces.com/blog/entry/98663" target="_blank">https://codeforces.com/blog/entry/98663</a>.</p>
 </details>
+<h2 id="editorial-11"><a class="header" href="#editorial-11">Editorial</a></h2>
+<h2 id="solutions-18"><a class="header" href="#solutions-18">Solutions</a></h2>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mclose">)</span></span></span></span> -- Knapsack with Binary Exponentiation</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(C^2 log V)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+#define int int64_t
+
+const int INF = LLONG_MAX &gt;&gt; 1;
+const int maxc = 1200 + 5;
+
+struct State {
+    
+    vector&lt;int&gt; dp;
+    
+    State () { dp.assign(2 * maxc + 1, 0); }
+    
+    int&amp; operator [] (int x)       { return dp[x + maxc]; }
+    int  operator [] (int x) const { return dp[x + maxc]; }
+    
+    State operator * (const State &amp;rhs) const {
+        const State &amp;lhs = *this;
+        State res;
+        for (int i = -maxc; i &lt;= maxc; ++i) {
+            for (int j = max(-maxc, -maxc-i); j &lt;= min(maxc, maxc-i); ++j) {
+                res[i+j] = max(res[i+j], lhs[i] + rhs[j]);
+            }
+        }
+        return res;
+    }
+    
+};
+
+void solve() {
+    int n, V; cin &gt;&gt; n &gt;&gt; V;
+    
+    vector&lt;int&gt; c(n), v(n);
+    for (int &amp;x : c) cin &gt;&gt; x;
+    for (int &amp;x : v) cin &gt;&gt; x;
+    
+    vector&lt;int&gt; best(maxc, 0);
+    for (int i = 0; i &lt; n; ++i) best[c[i]] = max(best[c[i]], v[i]);
+    
+    State base, ans;
+    for (int i = 0; i &lt;= 2*maxc; ++i) {
+        for (int j = 1; j &lt;= min(i, maxc-1); ++j) {
+            base.dp[i] = max(base.dp[i], base.dp[i-j] + best[j]);
+        }
+    }
+    for (int i = -maxc; i &lt;= maxc; ++i) ans[i] = (i &lt; 0 ? -INF : base[i - maxc]);
+    
+    // assert(base.dp == (ans * base).dp);
+    
+    int exp = V / maxc;
+    while (exp) {
+        if (exp &amp; 1) ans = ans * base;
+        exp &gt;&gt;= 1, base = base * base;
+    }
+    
+    cout &lt;&lt; ans[V % maxc] &lt;&lt; &quot;\n&quot;;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int t = 1; cin &gt;&gt; t;
+    for (int _ = 1; _ &lt;= t; ++_) {
+        solve();
+    }
+    
+    return 0;
+}
+</code></pre>
+</details>
 <div class="footnote-definition" id="partition_number"><sup class="footnote-definition-label">1</sup>
 <p><a href="https://oeis.org/A000041" target="_blank">https://oeis.org/A000041</a></p>
 </div>
@@ -5596,6 +5863,189 @@ for (S be the subset of U) { /* and all subset of S is enumerated */
 </details>
 <details><summary>Hint for Full Solution (Released 2023.12.29)</summary>
 <p>Do you think that <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord texttt">dp</span></span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord">∗</span><span class="mclose">]</span></span></span></span> and <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord texttt">dp</span></span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord">∗</span><span class="mclose">]</span></span></span></span> look similar? Can you find a way to compute <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord texttt">dp</span></span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord">∗</span><span class="mclose">]</span></span></span></span> from <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord texttt">dp</span></span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord">∗</span><span class="mclose">]</span></span></span></span> in <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> or <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> time?</p>
+</details>
+<h2 id="editorial-12"><a class="header" href="#editorial-12">Editorial</a></h2>
+<h2 id="solutions-19"><a class="header" href="#solutions-19">Solutions</a></h2>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> -- Simple DP Formula</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n^2)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+void solve() {
+    int n; cin &gt;&gt; n;
+    
+    vector&lt;int&gt; a(n), b(n);
+    for (int &amp;x : a) cin &gt;&gt; x;
+    for (int &amp;x : b) cin &gt;&gt; x;
+    
+    vector&lt;vector&lt;int&gt;&gt; dp(n+1, vector&lt;int&gt;(n+1, 0));
+    for (int i = 1; i &lt;= n; ++i) {
+        for (int j = 1; j &lt;= n; ++j) {
+            dp[i][j] = max({
+                dp[i][j-1],
+                dp[i-1][j],
+                dp[i-1][j-1] + (a[i-1] != b[j-1])
+            });
+        }
+    }
+    
+    vector&lt;pair&lt;int, int&gt;&gt; ans;
+    {
+        int nx = n, ny = n;
+        while (nx and ny) {
+                 if (dp[nx][ny] == dp[nx][ny-1]) --ny;
+            else if (dp[nx][ny] == dp[nx-1][ny]) --nx;
+            else ans.emplace_back(a[--nx], b[--ny]);
+        }
+        reverse(begin(ans), end(ans));
+    }
+    
+    int m = dp[n][n];
+    cout &lt;&lt; m &lt;&lt; &quot;\n&quot;;
+    for (int i = 0; i &lt; m; ++i) cout &lt;&lt; ans[i].first  &lt;&lt; &quot; \n&quot;[i == m-1];
+    for (int i = 0; i &lt; m; ++i) cout &lt;&lt; ans[i].second &lt;&lt; &quot; \n&quot;[i == m-1];
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int t = 1; cin &gt;&gt; t;
+    for (int _ = 1; _ &lt;= t; ++_) {
+        solve();
+    }
+    
+    return 0;
+}
+</code></pre>
+</details>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0503em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8003em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal">n</span></span></span><span style="top:-2.7603em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width='400em' height='1.08em' viewBox='0 0 400000 1080' preserveAspectRatio='xMinYMin slice'><path d='M95,702 c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14 c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54 c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10 s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429 c69,-144,104.5,-217.7,106.5,-221 l0 -0 c5.3,-9.3,12,-14,20,-14 H400000v40H845.2724 s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7 c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2397em;"><span></span></span></span></span></span><span class="mclose">)</span></span></span></span> -- Changing DP State</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n^1.5)
+ * - The minimum answer is n - floor(sqrt(n)).
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+const int INF = INT_MAX &gt;&gt; 1;
+
+void solve() {
+    int n; cin &gt;&gt; n;
+    int sqn = int(ceil(sqrtl(n))) + 5;
+    
+    vector&lt;int&gt; a(n), b(n);
+    for (int &amp;x : a) cin &gt;&gt; x;
+    for (int &amp;x : b) cin &gt;&gt; x;
+    
+    vector&lt;vector&lt;int&gt;&gt; dp(n+1, vector&lt;int&gt;(sqn+1, INF));
+    for (int j = 0; j &lt;= sqn; ++j) dp[0][j] = 0;
+    for (int i = 1; i &lt;= n; ++i) {
+        dp[i][0] = dp[i-1][0] + 1 + (dp[i-1][0] &lt; n and a[i-1] == b[dp[i-1][0]]);
+        for (int j = 1; j &lt;= sqn; ++j) {
+            dp[i][j] = min(
+                dp[i-1][j-1],
+                dp[i-1][j] + 1 + (dp[i-1][j] &lt; n and a[i-1] == b[dp[i-1][j]])
+            );
+        }
+    }
+    
+    for (int j = 0; j &lt;= sqn; ++j) {
+        if (dp[n][j] &gt; n) continue;
+        
+        int nx = n, ny = j;
+        vector&lt;pair&lt;int, int&gt;&gt; ans;
+        while (nx) {
+            if (ny and dp[nx][ny] == dp[nx-1][ny-1]) --nx, --ny;
+            else ans.emplace_back(a[nx-1], b[dp[nx][ny]-1]), --nx;
+        }
+        reverse(begin(ans), end(ans));
+        
+        cout &lt;&lt; n - j &lt;&lt; &quot;\n&quot;;
+        for (int i = 0; i &lt; n-j; ++i) cout &lt;&lt; ans[i].first  &lt;&lt; &quot; \n&quot;[i == n-j-1];
+        for (int i = 0; i &lt; n-j; ++i) cout &lt;&lt; ans[i].second &lt;&lt; &quot; \n&quot;[i == n-j-1];
+        
+        break;
+    }
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int t = 1; cin &gt;&gt; t;
+    for (int _ = 1; _ &lt;= t; ++_) {
+        solve();
+    }
+    
+    return 0;
+}
+</code></pre>
+</details>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> -- Observing DP Properties</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+void solve() {
+    int n; cin &gt;&gt; n;
+    
+    vector&lt;int&gt; a(n+1), b(n+1), inv(n+1), bar(n+1);
+    for (int i = 1; i &lt;= n; ++i) cin &gt;&gt; a[i], inv[a[i]] = i;
+    for (int i = 1; i &lt;= n; ++i) cin &gt;&gt; b[i], bar[inv[b[i]]] = i;
+    
+    vector&lt;pair&lt;int, int&gt;&gt; dp(2*n+1); /// [-n, n]
+    vector&lt;pair&lt;int, int&gt;&gt; fr(n+2, {0, 0}); /// [2, n+1]
+    for (int i = 0; i &lt;= n; ++i) dp[i - 0 + n] = {0, i + 0};
+    for (int j = 1; j &lt;= n; ++j) dp[0 - j + n] = {0, 0 + j};
+    
+    for (int i = 2; i &lt;= n+1; ++i) {
+        int j = bar[i-1] + 1;
+        auto [val_u, lst_u] = dp[(i-1) - j + n]; val_u += ((i-1) + j - lst_u) / 2;
+        auto [val_l, lst_l] = dp[i - (j-1) + n]; val_l += (i + (j-1) - lst_l) / 2;
+        if (val_u &gt;= val_l) dp[i - j + n] = {val_u, i + j}, fr[i] = {-1, 0};
+        else                dp[i - j + n] = {val_l, i + j}, fr[i] = {0, -1};
+    }
+    
+    auto [val, lst] = dp[n - n + n]; val += (n + n - lst) / 2;
+    int m = val;
+    vector&lt;pair&lt;int, int&gt;&gt; ans;
+    
+    {
+        int i = n+1, j = n+1;
+        while (i &gt; 1 and j &gt; 1) {
+            if (bar[i-1] == j-1) {
+                auto [di, dj] = fr[i];
+                i += di, j += dj;
+            }
+            else {
+                --i, --j;
+                if (i and j) ans.emplace_back(a[i], b[j]);
+            }
+        }
+        reverse(begin(ans), end(ans));
+    }
+    
+    cout &lt;&lt; m &lt;&lt; &quot;\n&quot;;
+    for (int i = 0; i &lt; m; ++i) cout &lt;&lt; ans[i].first  &lt;&lt; &quot; \n&quot;[i == m-1];
+    for (int i = 0; i &lt; m; ++i) cout &lt;&lt; ans[i].second &lt;&lt; &quot; \n&quot;[i == m-1];
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int t = 1; cin &gt;&gt; t;
+    for (int _ = 1; _ &lt;= t; ++_) {
+        solve();
+    }
+    
+    return 0;
+}
+</code></pre>
 </details>
 <div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="d-longest-increasing-subsequence"><a class="header" href="#d-longest-increasing-subsequence">D. Longest Increasing Subsequence</a></h1>
@@ -5665,6 +6115,219 @@ for (S be the subset of U) { /* and all subset of S is enumerated */
 <p>Consider <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7804em;vertical-align:-0.136em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> where <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">a</span><span class="mopen">[</span><span class="mord mathnormal">x</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">a</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">]</span></span></span></span>, then <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord texttt">dp</span></span><span class="mopen">[</span><span class="mord mathnormal">x</span><span class="mclose">]</span></span></span></span> is not a valid transition for <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord texttt">dp</span></span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span></span></span></span> since the third condition is violated when <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>.</p>
 </details>
 </details>
+<h2 id="editorial-13"><a class="header" href="#editorial-13">Editorial</a></h2>
+<h2 id="solutions-20"><a class="header" href="#solutions-20">Solutions</a></h2>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> -- Calculating Sum with one DP</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n^3)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+using i64 = long long;
+
+const i64 mod = 1'000'000'007;
+
+void solve() {
+    int N; cin &gt;&gt; N;
+    
+    vector&lt;i64&gt; A(N+2), nA(N+2);
+    for (int i = 1; i &lt;= N; ++i) cin &gt;&gt; A[i], nA[N+1-i] = mod - A[i];
+    A[0] = 0, A[N+1] = mod;
+    
+    vector&lt;pair&lt;i64, i64&gt;&gt; dp(N+2, {0, 0});
+    dp[0] = {1, 0};
+    for (int i = 1; i &lt;= N+1; ++i) {
+        for (int j = 0; j &lt; i; ++j) {
+            if (A[j] &gt; A[i]) continue;
+            bool valid = true;
+            for (int k = j+1; k &lt;= i-1; ++k) {
+                if (A[j] &lt;= A[k] and A[k] &lt;= A[i]) valid = false;
+            }
+            if (valid) {
+                dp[i].first = (dp[i].first + dp[j].first) % mod;
+                dp[i].second = (dp[i].second + dp[j].second + dp[j].first * A[i]) % mod;
+            }
+        }
+    }
+    
+    i64 cnt = dp[N+1].first, sum = dp[N+1].second;
+    cout &lt;&lt; cnt &lt;&lt; &quot; &quot; &lt;&lt; sum &lt;&lt; &quot;\n&quot;;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int t = 1; cin &gt;&gt; t;
+    for (int _ = 1; _ &lt;= t; ++_) {
+        solve();
+    }
+    
+    return 0;
+}
+</code></pre>
+</details>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> -- Calculating Sum with two DPs</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n^3)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+using i64 = long long;
+
+const int INF = 1'000'000'000 + 5;
+const i64 mod = 1'000'000'007;
+
+vector&lt;i64&gt; solve_dp(int N, vector&lt;i64&gt; A) {
+    vector&lt;i64&gt; dp(N+2, 0);
+    dp[0] = 1;
+    for (int i = 1; i &lt;= N+1; ++i) {
+        for (int j = 0; j &lt; i; ++j) {
+            if (A[j] &gt; A[i]) continue;
+            bool valid = true;
+            for (int k = j+1; k &lt;= i-1; ++k) {
+                if (A[j] &lt;= A[k] and A[k] &lt;= A[i]) valid = false;
+            }
+            if (valid) dp[i] = (dp[i] + dp[j]) % mod;
+        }
+    }
+    return dp;
+}
+
+void solve() {
+    int N; cin &gt;&gt; N;
+    
+    vector&lt;i64&gt; A(N+2), nA(N+2);
+    for (int i = 1; i &lt;= N; ++i) cin &gt;&gt; A[i], nA[N+1-i] = INF - A[i];
+    A[0] = nA[0] = 0, A[N+1] = nA[N+1] = INF;
+    
+    vector&lt;i64&gt; dp = solve_dp(N, A);
+    vector&lt;i64&gt; ndp = solve_dp(N, nA);
+    reverse(begin(ndp), end(ndp));
+    
+    i64 cnt = dp[N+1], sum = 0;
+    for (int i = 1; i &lt;= N; ++i) sum = (sum + dp[i] * ndp[i] % mod * A[i]) % mod;
+    cout &lt;&lt; cnt &lt;&lt; &quot; &quot; &lt;&lt; sum &lt;&lt; &quot;\n&quot;;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int t = 1; cin &gt;&gt; t;
+    for (int _ = 1; _ &lt;= t; ++_) {
+        solve();
+    }
+    
+    return 0;
+}
+</code></pre>
+</details>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1484em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8984em;"><span style="top:-3.1473em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> -- DP with Divide and Conquer</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n log^2 n)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+#define int int64_t
+
+const int INF = 1'000'000'000 + 5;
+const int mod = 1'000'000'007;
+
+struct ID {
+    int a, i, sum;
+    ID (int _a, int _i, int _sum) :
+        a(_a), i(_i), sum(_sum) {}
+    bool operator &lt; (const ID &amp;rhs) { return a &gt; rhs.a; }
+};
+
+vector&lt;int&gt; solve_dp(int N, vector&lt;int&gt; A) {
+    
+    vector&lt;pair&lt;int, int&gt;&gt; disc;
+    for (int i = 0; i &lt;= N+1; ++i) disc.emplace_back(A[i], i);
+    sort(begin(disc), end(disc));
+    
+    vector&lt;int&gt; _id(N+2);
+    for (int i = 0; i &lt;= N+1; ++i) {
+        A[i] = lower_bound(begin(disc), end(disc), pair{A[i], i}) - begin(disc);
+        _id[A[i]] = i;
+    }
+    
+    vector&lt;int&gt; dp(N+2, 0); dp[0] = 1;
+    
+    function&lt;void(vector&lt;int&gt;, int, int)&gt; recur = [&amp;](vector&lt;int&gt; id, int L, int R) {
+        if (L == R) return;
+        
+        int M = (L + R) &gt;&gt; 1;
+        vector&lt;int&gt; id_L, id_R;
+        for (int i : id) (i &lt;= M ? id_L : id_R).emplace_back(i);
+        recur(id_L, L, M);
+        
+        deque&lt;ID&gt; stk_L; /// (a[i], i, prefix_sum)
+        deque&lt;int&gt; stk_R; /// (i)
+        for (int i : id) {
+            if (i &lt;= M) {
+                /// maintain stk with increasing a[i] and decreasing i ([0] is smallest) ///
+                while (stk_L.size() and i &gt; stk_L[0].i) stk_L.pop_front();
+                stk_L.emplace_front(A[i], i, (stk_L.size() ? stk_L[0].sum : 0) + dp[i]);
+            }
+            else {
+                /// maintain stk with increasing a[i] and increasing i ([0] is largest) ///
+                while (stk_R.size() and i &lt; stk_R[0]) stk_R.pop_front();
+                /// query stk_L range sum (back, stk_R[0]) ///
+                if (stk_L.size()) {
+                    auto it = lower_bound(begin(stk_L), end(stk_L), ID{(stk_R.size() ? A[stk_R[0]] : -1), 0, 0});
+                    // while (it != begin(stk_L)) {
+                    //     it = prev(it);
+                    //     dp[i] = (dp[i] + dp[it-&gt;i]) % mod;
+                    //     debug(i, it-&gt;i);
+                    // }
+                    int cnt = (stk_L[0].sum - (it != end(stk_L) ? it-&gt;sum : 0)) % mod;
+                    dp[i] = (dp[i] + cnt) % mod;
+                }
+                stk_R.emplace_front(i);
+            }
+        }
+        
+        recur(id_R, M+1, R);
+    };
+    recur(_id, 0, N+1);
+    
+    return dp;
+}
+
+void solve() {
+    int N; cin &gt;&gt; N;
+    
+    vector&lt;int&gt; A(N+2), nA(N+2);
+    for (int i = 1; i &lt;= N; ++i) cin &gt;&gt; A[i], nA[N+1-i] = INF - A[i];
+    A[0] = nA[0] = 0, A[N+1] = nA[N+1] = INF;
+    
+    vector&lt;int&gt; dp = solve_dp(N, A);
+    vector&lt;int&gt; ndp = solve_dp(N, nA);
+    reverse(begin(ndp), end(ndp));
+    
+    int cnt = dp[N+1], sum = 0;
+    for (int i = 1; i &lt;= N; ++i) sum = (sum + dp[i] * ndp[i] % mod * A[i]) % mod;
+    cout &lt;&lt; cnt &lt;&lt; &quot; &quot; &lt;&lt; sum &lt;&lt; &quot;\n&quot;;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int t = 1; cin &gt;&gt; t;
+    for (int _ = 1; _ &lt;= t; ++_) {
+        solve();
+    }
+    
+    return 0;
+}
+</code></pre>
+</details>
 <div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="e-maximum-sum-path"><a class="header" href="#e-maximum-sum-path">E. Maximum Sum Path</a></h1>
 <ul>
@@ -5695,6 +6358,58 @@ for (S be the subset of U) { /* and all subset of S is enumerated */
 </details>
 <details><summary>Hint for Full Solution (Released 2023.12.29)</summary>
 <p>The problem now (almost) boils down to &quot;<strong>finding the longest path in a DAG</strong>,&quot; which is a classical problem in dynamic programming.</p>
+</details>
+<h2 id="editorial-14"><a class="header" href="#editorial-14">Editorial</a></h2>
+<h2 id="solutions-21"><a class="header" href="#solutions-21">Solutions</a></h2>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mclose">)</span></span></span></span> -- Finding Longest Path on DAG</summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n+m)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+const int INF = INT_MAX &gt;&gt; 1;
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int n, m; cin &gt;&gt; n &gt;&gt; m;
+    
+    vector&lt;int&gt; l(n);
+    for (int &amp;x : l) cin &gt;&gt; x;
+    
+    vector&lt;vector&lt;pair&lt;int, int&gt;&gt;&gt; adj(2*n+1);
+    vector&lt;int&gt; deg_i(2*n+1, 0), vis(2*n+1, 0);
+    for (int i = 0; i &lt; 2*n; ++i) {
+        if (l[i&gt;&gt;1] == 0) adj[2*n].emplace_back(i, 0),    ++deg_i[i];
+        else              adj[2*n].emplace_back(i, -INF), ++deg_i[i];
+    }
+    for (int i = 0; i &lt; m; ++i) {
+        int u, v, w; char c; cin &gt;&gt; u &gt;&gt; v &gt;&gt; c &gt;&gt; w, --u, --v;
+        if (c == 'B') adj[u&lt;&lt;1].emplace_back(v&lt;&lt;1|1, w), ++deg_i[v&lt;&lt;1|1];
+        if (c == 'W') adj[u&lt;&lt;1|1].emplace_back(v&lt;&lt;1, w), ++deg_i[v&lt;&lt;1];
+    }
+    
+    vector&lt;int&gt; ans(n, 0);
+    vector&lt;int&gt; dp(2*n+1, 0);
+    function&lt;void(int)&gt; dag_dp = [&amp;](int now) {
+        for (auto [x, star] : adj[now]) {
+            dp[x] = max(dp[x], dp[now] + star);
+            if (++vis[x] == deg_i[x]) {
+                ans[x&gt;&gt;1] = max(ans[x&gt;&gt;1], dp[x]);
+                if (dp[x] &lt; l[x&gt;&gt;1]) dp[x] = -INF;
+                dag_dp(x);
+            }
+        }
+    };
+    dag_dp(2*n);
+    
+    for (int i = 0; i &lt; n; ++i) cout &lt;&lt; ans[i] &lt;&lt; &quot; \n&quot;[i == n-1];
+    
+    return 0;
+}
+</code></pre>
 </details>
 <div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="f-counting-paths-on-a-graph"><a class="header" href="#f-counting-paths-on-a-graph">F. Counting Paths on a Graph</a></h1>
@@ -5729,6 +6444,57 @@ for (S be the subset of U) { /* and all subset of S is enumerated */
 <details><summary>Hint for Subtask 4: <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">400</span></span></span></span> (Released 2023.12.18)</summary>
 <p>The only two things that matter are the last visited vertex <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> and the absolute difference between the last two verices <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord">∣</span></span></span></span>.</p>
 <p>How may the state be defined? What is the transition between states? In what order should we update the DP tables?</p>
+</details>
+<h2 id="editorial-15"><a class="header" href="#editorial-15">Editorial</a></h2>
+<h2 id="solutions-22"><a class="header" href="#solutions-22">Solutions</a></h2>
+<details><summary><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mclose">)</span></span></span></span></summary>
+<pre><code class="language-cpp">/**
+ * Time Complexity: O(n log n + m log m)
+**/
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int N, M, mod; cin &gt;&gt; N &gt;&gt; M &gt;&gt; mod;
+    
+    vector&lt;tuple&lt;int, int, int&gt;&gt; edges(M);
+    for (auto &amp;[s, u, v] : edges) cin &gt;&gt; u &gt;&gt; v, s = v - u;
+    sort(begin(edges), end(edges));
+    
+    vector&lt;int&gt; dp[2];
+    dp[0].assign(N+1, 1), dp[0][0] = 0;
+    dp[1].assign(N+1, 0);
+    
+    auto modadd = [&amp;](int x, int y) -&gt; int { return (x + y &gt;= mod ? x + y - mod : x + y); };
+    
+    for (int step = 1, tok1 = 0, tok2 = 0; step &lt;= N; ++step) {
+        
+        for (int i = step; i &lt;= N; i += step) dp[1][i] = modadd((i+step &lt;= N ? dp[0][i+step] : 0), dp[0][i-step]);
+        while (tok1 &lt; M and get&lt;0&gt;(edges[tok1]) == step) {
+            auto [s, u, v] = edges[tok1++];
+            dp[1][v] = modadd(dp[1][v], dp[0][u]);
+            dp[1][u] = modadd(dp[1][u], dp[0][v]);
+        }
+        
+        for (int i = step; i &lt;= N; i += step) dp[0][i] = modadd(dp[0][i], dp[1][i]), dp[1][i] = 0;
+        while (tok2 &lt; tok1) {
+            auto [s, u, v] = edges[tok2++];
+            dp[0][v] = modadd(dp[0][v], dp[1][v]), dp[1][v] = 0;
+            dp[0][u] = modadd(dp[0][u], dp[1][u]), dp[1][u] = 0;
+        }
+        
+    }
+    
+    int ans = mod - N;
+    for (int i = 1; i &lt;= N; ++i) ans = modadd(ans, dp[0][i]);
+    cout &lt;&lt; ans &lt;&lt; &quot;\n&quot;;
+    
+    return 0;
+}
+</code></pre>
 </details>
 <div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="g-rod-cutting"><a class="header" href="#g-rod-cutting">G. Rod Cutting</a></h1>
@@ -5774,6 +6540,104 @@ for (S be the subset of U) { /* and all subset of S is enumerated */
 </ul>
 </details>
 </details>
+<h2 id="editorial-16"><a class="header" href="#editorial-16">Editorial</a></h2>
+<h2 id="solutions-23"><a class="header" href="#solutions-23">Solutions</a></h2>
+<!-- <details><summary></summary>
+
+```cpp
+/**
+ * Time Complexity: seems like O(n^2 log n) with const. opt.
+**/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define int int64_t
+
+const int INF = LLONG_MAX >> 2;
+
+struct State {
+    
+    int base;
+    deque<int> v;
+    
+    State (int b = INF, int sz = 1) : base(b), v(sz, INF) {}
+    State (int b, initializer_list<int> vec) : base(b), v(vec) {}
+    
+    int get_min_cost() {
+        int ans = INF;
+        for (int i = 0, b = base; i < int(v.size()); ++i, b += 3) {
+            if (b >= 0) ans = min(ans, v[i]);
+        }
+        return ans;
+    }
+    
+    State operator + (const State &rhs) {
+        const State &lhs = *this;
+        State now(lhs.base + rhs.base, int(lhs.v.size()) + int(rhs.v.size()) - 1);
+        for (int i = 0; i < int(lhs.v.size()); ++i) {
+            for (int j = 0; j < int(rhs.v.size()); ++j) {
+                now.v[i + j] = min(now.v[i + j], lhs.v[i] + rhs.v[j]);
+            }
+        }
+        return now;
+    }
+    
+    State operator + (int cost) {
+        State now = *this;
+        for (int &x : now.v) x += cost;
+        return now;
+    }
+    
+    friend void chmin(State &lhs, const State &rhs) {
+        /// extend lhs.v to [min(lhs.base, rhs.base), max(lhs.base + SZ(lhs.v), rhs.base + SZ(rhs.v))) ///
+        if (lhs.base == INF) { lhs = rhs; return; }
+        while (lhs.base > rhs.base) lhs.v.emplace_front(INF), lhs.base -= 3;
+        while (lhs.base + 3*int(lhs.v.size()) < rhs.base + 3*int(rhs.v.size())) lhs.v.emplace_back(INF);
+        for (int r = 0, l = (rhs.base - lhs.base) / 3; r < int(rhs.v.size()); ++r, ++l) {
+            lhs.v[l] = min(lhs.v[l], rhs.v[r]);
+        }
+    }
+    
+};
+
+signed main() {
+    ios_base::sync_with_stdio(0), cin.tie(0);
+    
+    int n, C; cin >> n >> C;
+    
+    vector<int> c(3*n);
+    for (int i = 1; i <= 3*n-1; ++i) cin >> c[i];
+    
+    map<pair<int, int>, State> dp;
+    
+    function<void(int, int)> recur = [&](int L, int R) {
+        if (dp.count({L, R})) return;
+        if (R - L == 1) { dp[{L, R}] = State( 1, {0}); return; }
+        if (R - L == 2) { dp[{L, R}] = State(-1, {0}); }
+        if (R - L == 3) { dp[{L, R}] = State( 0, {0}); }
+        
+        int M = (L + R) >> 1;
+        
+        auto &now = dp[{L, R}];
+        for (int m = max(L+1, M-2); m <= min(R-1, M+2); ++m) {
+            int base_cost = c[m] + (R - L) * C;
+            recur(L, m), recur(m, R);
+            auto &dpL = dp[{L, m}], &dpR = dp[{m, R}];
+            chmin(now, dpL + dpR + base_cost);
+        }
+    };
+    
+    recur(0, 3*n);
+    
+    int ans = dp[{0, 3*n}].get_min_cost();
+    cout << ans << "\n";
+    
+    return 0;
+}
+```
+
+</details> -->
 <div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="lab-5"><a class="header" href="#lab-5">Lab 5</a></h1>
 <ul>
